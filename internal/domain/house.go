@@ -8,5 +8,5 @@ type House struct {
   Address         string
   Developer       string
   CreatedAt       time.Time
-  LastFlatUpdate time.Time
+  LastFlatUpdate  time.Time
 }

@@ -5,4 +5,5 @@ type Flat struct {
   Number      int
   Price       int
   Rooms       int
+  Status      int
 }
