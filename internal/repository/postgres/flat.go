@@ -21,7 +21,7 @@ func (p *PostgresFlatRepo) GetFlatsByHouseID(ctx context.Context, houseID int) (
 
 func (p *PostgresFlatRepo) GetApprovedFlatsByHouseID(ctx context.Context, houseID int) ([]domain.Flat, error) {
   var approvedFlats []domain.Flat
-  return approvedFlats, 
+  return approvedFlats, nil
 }
 
 func (p *PostgresFlatRepo) Create(ctx context.Context, flat domain.Flat) (domain.Flat, error) {
