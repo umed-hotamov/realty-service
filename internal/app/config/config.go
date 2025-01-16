@@ -3,19 +3,33 @@ package config
 import (
 	"log"
 
-	"github.com/umed-hotamov/house-rental/internal/app/server"
-
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-  Server server.Config
+  Server ServerConfig
+}
+
+type ServerConfig struct {
+  Host string
+  Port string
 }
 
 func GetConfig() *Config {
+  viper.SetConfigName("config")
+	viper.AddConfigPath("config")
+	viper.SetConfigType("yml")
+
+  viper.AutomaticEnv()
+
   if err := bindEnvConfig(); err != nil {
     log.Fatalf("error reading config: %v", err)
   }
+
+  	log.Println("reading config file: config/config.yaml")
+		if err := viper.ReadInConfig(); err != nil {
+			log.Fatalf("error reading config file: %v", err)
+		}
 
   cfg := new(Config)
   if err := viper.Unmarshal(cfg); err != nil {

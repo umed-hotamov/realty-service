@@ -5,26 +5,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"os/signal"
 	"time"
 
 	"github.com/umed-hotamov/house-rental/internal/app/config"
 
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/fx"
-	// "go.uber.org/zap"
 )
-
-type Config struct {
-  Host string
-  Port string
-}
 
 func NewEchoRouter() *echo.Echo {
   e := echo.New()
-
+  
+  e.Use(middleware.Logger())
   e.GET("/ping", func(c echo.Context) error {
+      time.Sleep(15 * time.Second)
       return c.String(http.StatusOK, "Pong")
   })
 
@@ -36,7 +31,6 @@ type ServerParams struct {
 
   Router *echo.Echo
   Cfg    *config.Config
-  // Logger *zap.Logger
 }
 
 func NewServer(lc fx.Lifecycle, params ServerParams) *http.Server {
@@ -49,25 +43,14 @@ func NewServer(lc fx.Lifecycle, params ServerParams) *http.Server {
   
   lc.Append(fx.Hook{
     OnStart: func(ctx context.Context) error {
-      ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
-      defer stop()
-
       go func() {
-        log.Printf("server started on port: ", params.Cfg.Server.Port)
+        log.Printf("server started on port: %s\n", params.Cfg.Server.Port)
         server.ListenAndServe()
-      }()
-
-      go func() {
-        <-ctx.Done()
-        fmt.Print("Intrrupt signal received, shutting down...")
-        stop()
       }()
 
       return nil
     },
     OnStop: func(ctx context.Context) error {
-      ctx, cancel := context.WithTimeout(ctx, 30 * time.Second)
-      defer cancel()
       return server.Shutdown(ctx) 
     },
   })
