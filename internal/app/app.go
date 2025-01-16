@@ -20,4 +20,5 @@ func Run() {
     fx.Supply(cfg),
     fx.Invoke(func(*http.Server) {}),
   ).Run()
+
 }
