@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/umed-hotamov/house-rental/internal/domain"
+	"github.com/umed-hotamov/realty-service/internal/domain"
 )
 
 type PostgresHouseRepo struct {
