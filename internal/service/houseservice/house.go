@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/umed-hotamov/house-rental/internal/domain"
-	"github.com/umed-hotamov/house-rental/internal/repository"
+	"github.com/umed-hotamov/realty-service/internal/domain"
+	"github.com/umed-hotamov/realty-service/repository"
 )
 
 type HouseService struct {

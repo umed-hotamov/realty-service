@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/umed-hotamov/house-rental/internal/app/config"
+	"github.com/umed-hotamov/realty-service/internal/app/config"
 
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"

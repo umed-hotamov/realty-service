@@ -3,8 +3,8 @@ package app
 import (
 	"net/http"
 
-	"github.com/umed-hotamov/house-rental/internal/app/config"
-	"github.com/umed-hotamov/house-rental/internal/app/server"
+	"github.com/umed-hotamov/realty-service/internal/app/config"
+	"github.com/umed-hotamov/realty-service/internal/app/server"
 
 	"go.uber.org/fx"
 )
