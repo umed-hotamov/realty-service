@@ -28,7 +28,7 @@ create table public.flat (
   house_id uuid not null,
   flat_number integer not null,
   rooms integer not null,
-  square not null,
+  square numeric not null,
   foreign key (property_id) references public.property(id) on delete cascade
 );
 
