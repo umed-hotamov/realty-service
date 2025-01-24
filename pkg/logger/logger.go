@@ -14,7 +14,7 @@ import (
 func prepareLogPath(cfg *config.Config) error {
   _, err := os.Stat(cfg.Logger.Path)
   if os.IsNotExist(err) {
-    err := os.MkdirAll(cfg.Logger.Path, 0666)
+    err := os.MkdirAll(cfg.Logger.Path, 0777)
     if err != nil {
       return err
     }
@@ -33,14 +33,14 @@ func openLogFile(cfg *config.Config) (*os.File, error) {
   return file, nil
 } 
 
-func NewLogger(cfg *config.Config) (*zap.Logger, error) {
+func NewLogger(cfg *config.Config) *zap.Logger {
   err := prepareLogPath(cfg)
   if err != nil {
     log.Fatalf("failed to prepare log path: %v", err)
   }
   logFile, err := openLogFile(cfg)
   if err != nil {
-    log.Printf("failed to open log file: %v", err)
+    log.Fatalf("failed to open log file: %v", err)
   }
   
   var logLevel zapcore.Level
@@ -49,6 +49,8 @@ func NewLogger(cfg *config.Config) (*zap.Logger, error) {
     logLevel = zapcore.DebugLevel
   case "warn": 
     logLevel = zapcore.WarnLevel
+  case "info":
+    logLevel = zapcore.InfoLevel
   case "error":
     logLevel = zapcore.ErrorLevel
   case "fatal":
@@ -64,5 +66,5 @@ func NewLogger(cfg *config.Config) (*zap.Logger, error) {
     zapcore.NewCore(encoder, writer, logLevel),
   )
 
-  return zap.New(core), nil
+  return zap.New(core, zap.AddCaller())
 }
