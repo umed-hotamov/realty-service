@@ -60,6 +60,9 @@ func NewLogger(cfg *config.Config) *zap.Logger {
   }
   
   encoderConfig := zap.NewProductionEncoderConfig()
+  encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+  encoderConfig.TimeKey = "timestamp"
+  
   encoder := zapcore.NewJSONEncoder(encoderConfig)
   writer := zapcore.AddSync(logFile)
   core := zapcore.NewTee(
