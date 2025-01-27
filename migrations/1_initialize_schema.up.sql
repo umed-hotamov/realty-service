@@ -10,7 +10,8 @@ create table public.user (
 
 create type offer_type as enum('rent', 'sale');
 create type property_type as enum ('flat', 'private_house');
-create type moderation_status as enum ('created', 'approved', 'declined', 'on moderation', 'sold', 'for rent');
+create type property_status as enum ('sold', 'for rent');
+create type moderation_status as enum ('created', 'approved', 'declined', 'on moderation');
 
 create table public.property (
   id uuid primary key,
@@ -18,7 +19,8 @@ create table public.property (
   type property_type not null,
   offer offer_type not null,
   price numeric not null,
-  status moderation_status not null,
+  p_status property_status,
+  m_status moderation_status not null,
   foreign key (owner_id) references public.user(id) on delete cascade
 );
 
