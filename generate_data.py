@@ -12,7 +12,7 @@ insert_private_house = 'insert into public.private_house (id, property_id, addre
 insert_building      = 'insert into public.apartment_building (id, year_built, address, developer) values\n'
 insert_listing       = 'insert into public.listing (id, user_id, property_id, title, description, status, created_at) values\n'
 
-user_roles        = ['user', 'moderator']
+user_roles        = ['seller', 'moderator']
 offer_type        = ['rent', 'sale']
 property_type     = ['flat', 'private_house']
 moderation_status = ['on moderation']
