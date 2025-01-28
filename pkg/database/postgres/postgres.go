@@ -19,17 +19,17 @@ const (
 )
 
 func NewPostgresDB(cfg *config.Config, logger *zap.Logger) *sqlx.DB {
-  dsn := fmt.Sprintf("host=%s port%s dbname=%s password=%s",
+  dsn := fmt.Sprintf("host=%s port%s dbname=%s user=%s password=%s",
                       cfg.Postgres.Host,
                       cfg.Postgres.Port,
                       cfg.Postgres.DBName,
+                      cfg.Postgres.User,
                       cfg.Postgres.Password)
 
   db, err := sqlx.Connect("pgx", dsn) 
 
   if err != nil {
     logger.Fatal("failed to connect to postgres: %s", zap.String("dsn", dsn))
-    return nil
   }
 
   db.SetMaxOpenConns(maxConns)
