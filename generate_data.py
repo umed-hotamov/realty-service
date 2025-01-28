@@ -5,11 +5,12 @@ from faker import Faker
 
 fake = Faker()
 
-insert_user          = 'insert into public.user (id, email, password, phone, role) values'
-insert_property      = 'insert into public.property (id, owner_id, type, offer, price, p_status, m_status) values'
-insert_flat          = 'insert into public.flat (id, property_id, house_id, flat_number, rooms, square)'
-insert_private_house = 'insert into public.private_house (id, property_id, address, rooms, square)'
-insert_building      = 'insert into public.apartment_building (id, year_built, address, developer)'
+insert_user          = 'insert into public.user (id, email, password, phone, role) values\n'
+insert_property      = 'insert into public.property (id, owner_id, type, offer, price, p_status, m_status) values\n'
+insert_flat          = 'insert into public.flat (id, property_id, house_id, flat_number, rooms, square) values\n'
+insert_private_house = 'insert into public.private_house (id, property_id, address, rooms, square) values\n'
+insert_building      = 'insert into public.apartment_building (id, year_built, address, developer) values\n'
+insert_listing       = 'insert into public.listing (id, user_id, property_id, title, description, status, created_at) values\n'
 
 user_roles        = ['user', 'moderator']
 offer_type        = ['rent', 'sale']
@@ -19,7 +20,8 @@ property_status   = ['sold', 'for rent']
 
 users = []
 properties = []
-houses = []
+buildings = []
+
 
 def construct_user_data():
     return dict(
@@ -30,8 +32,10 @@ def construct_user_data():
             role=random.choice(user_roles),
             )
 
+
 def add_user_insert_values(user):
     return f"('{user['id']}', '{user['email']}', '{user['password']}', '{user['phone']}', '{user['role']}'),\n"
+
 
 def generate_user(user_num):
     stmt = insert_user
@@ -59,7 +63,7 @@ def construct_flat_data(property_id):
     return dict(
             id=uuid.uuid4(),
             property_id=property_id,
-            house_id=random.choice(houses)['id'],
+            house_id=random.choice(buildings)['id'],
             flat_number = random.randint(1, 50),
             rooms = random.randint(1, 5),
             square = random.randint(10, 100),
@@ -99,8 +103,8 @@ def generate_property(property_num):
         property_stmt += add_property_insert_values(property)
     property_stmt = property_stmt.strip(',\n') + ';\n\n'
 
-    flat_stmt = ''
-    private_house_stmt = ''
+    flat_stmt = insert_flat
+    private_house_stmt = insert_private_house
     for p in properties:
         if p['type'] == 'flat':
             flat = construct_flat_data(p['id'])
@@ -111,7 +115,7 @@ def generate_property(property_num):
 
     if flat_stmt:
         flat_stmt = flat_stmt.strip(',\n') + ';\n\n'
-    else:
+    if private_house_stmt:
         private_house_stmt = private_house_stmt.strip(',\n') + ';\n\n'
 
     return property_stmt + private_house_stmt + flat_stmt 
@@ -135,13 +139,14 @@ def generate_building(building_num):
     stmt = insert_building
     for _ in range(building_num):
         building = construct_building_data()
+        buildings.append(building)
         stmt += add_building_insert_values(building)
 
     return stmt.strip(',\n') + ';\n\n'
 
 
 def get_random_timestamp():
-    random_timestamp = fake.date_time_betwee(
+    random_timestamp = fake.date_time_between(
     start_date="-1y",
     end_date="now",  
     tzinfo=None      
@@ -169,27 +174,32 @@ def add_listing_insert_values(listing):
 
 
 def generate_listing(listing_num):
-    pass
+    stmt = insert_listing
+    for _ in range(listing_num):
+        listing = construct_listing_data()
+        stmt += add_listing_insert_values(listing)
+
+    return stmt.strip(',\n') + ';\n\n'
 
 
 def generate_data(user_num, property_num, building_num, listing_num, dest):
     if user_num:
         dest.write(generate_user(user_num))
-    if property_num:
-        dest.write(generate_property(property_num))
     if building_num:
         dest.write(generate_building(building_num))
+    if property_num:
+        dest.write(generate_property(property_num))
     if listing_num:
-        dest.wrtie(generate_listing(listing_num))
+        dest.write(generate_listing(listing_num))
     
 
-if __name__ == "main":
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parse info to construct sql statements')
 
-    parser.add_argument('--users', type=int, default=5, help='generate users')
-    parser.add_argument('--properties', type=int, default=5, help='generate properties')
-    parser.add_argument('--buildings', type=int, default=5, help='genereate buildings')
-    parser.add_argument('--listings', type=int, default=5, help='generate listings')
+    parser.add_argument('--users', type=int, default=2, help='generate users')
+    parser.add_argument('--buildings', type=int, default=10, help='genereate buildings')
+    parser.add_argument('--properties', type=int, default=2, help='generate properties')
+    parser.add_argument('--listings', type=int, default=2, help='generate listings')
     parser.add_argument('--file', type=str, default='insert.sql', help='destination file')
 
     args = parser.parse_args()
