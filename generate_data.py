@@ -15,8 +15,8 @@ insert_listing       = 'insert into public.listing (id, user_id, property_id, ti
 user_roles        = ['user', 'moderator']
 offer_type        = ['rent', 'sale']
 property_type     = ['flat', 'private_house']
-moderation_status = ['created', 'approved', 'declined', 'on moderation']
-property_status   = ['sold', 'for rent']
+moderation_status = ['on moderation']
+property_status   = ['none']
 
 users = []
 properties = []
@@ -54,7 +54,7 @@ def construct_property_data():
             type=random.choice(property_type),
             offer=random.choice(offer_type),
             price=random.randint(10000, 10000000),
-            p_status=random.choice(property_type),
+            p_status=random.choice(property_status),
             m_status=random.choice(moderation_status)
             )
 
@@ -103,13 +103,17 @@ def generate_property(property_num):
         property_stmt += add_property_insert_values(property)
     property_stmt = property_stmt.strip(',\n') + ';\n\n'
 
-    flat_stmt = insert_flat
-    private_house_stmt = insert_private_house
+    flat_stmt = ''
+    private_house_stmt = ''    
     for p in properties:
         if p['type'] == 'flat':
+            if not flat_stmt:
+                flat_stmt = insert_flat
             flat = construct_flat_data(p['id'])
             flat_stmt += add_flat_insert_values(flat)
         else:
+            if not private_house_stmt:
+                private_house_stmt = insert_private_house
             private_house = construct_private_house_data(p['id'])
             private_house_stmt += add_private_house_insert_values(private_house)
 
