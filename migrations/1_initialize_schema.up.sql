@@ -1,4 +1,4 @@
-create type user_role as enum ('user', 'moderator');
+create type user_role as enum ('seller', 'moderator');
 
 create table public.user (
   id uuid primary key,
