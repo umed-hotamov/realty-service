@@ -1,9 +1,16 @@
 package domain
 
+type UserRole int
+
+const (
+  Seller UserRole = iota
+  Moderator
+)
+
 type User struct {
-  ID          int
-  Email       string
-  Password    string
-  PhoneNumber string
-  Role        string
+  ID       ID
+  Email    string
+  Password string
+  Phone    string
+  Role     UserRole
 }
