@@ -19,7 +19,7 @@ const (
 )
 
 func NewPostgresDB(cfg *config.Config, logger *zap.Logger) *sqlx.DB {
-  dsn := fmt.Sprintf("host=%s port%s dbname=%s user=%s password=%s",
+  dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s",
                       cfg.Postgres.Host,
                       cfg.Postgres.Port,
                       cfg.Postgres.DBName,
@@ -36,6 +36,6 @@ func NewPostgresDB(cfg *config.Config, logger *zap.Logger) *sqlx.DB {
   db.SetMaxIdleConns(maxIdleConns)
   db.SetConnMaxLifetime(maxConnLifeTime)
   db.SetConnMaxIdleTime(maxIdleConnTime)
-
+  
   return db
 }
