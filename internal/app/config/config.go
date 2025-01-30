@@ -7,12 +7,28 @@ import (
 )
 
 type Config struct {
-  Server ServerConfig
+  Server   ServerConfig
+  Postgres PosrtgresConfig
+  Logger   LoggerConfig
 }
 
 type ServerConfig struct {
   Host string
   Port string
+}
+
+type PosrtgresConfig struct {
+  Host     string
+  Port     string
+  DBName   string
+  User     string
+  Password string
+}
+
+type LoggerConfig struct {
+  Path     string
+  FileName string
+  Level    string
 }
 
 func GetConfig() *Config {
@@ -26,10 +42,10 @@ func GetConfig() *Config {
     log.Fatalf("error reading config: %v", err)
   }
 
-  	log.Println("reading config file: config/config.yaml")
-		if err := viper.ReadInConfig(); err != nil {
-			log.Fatalf("error reading config file: %v", err)
-		}
+  log.Println("reading config file: config/config.yaml")
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("error reading config file: %v", err)
+	}
 
   cfg := new(Config)
   if err := viper.Unmarshal(cfg); err != nil {
