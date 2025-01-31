@@ -10,7 +10,7 @@ create table public.user (
 
 create type offer_type as enum('rent', 'sale');
 create type property_type as enum ('flat', 'private_house');
-create type property_status as enum ('sold', 'for rent', 'none');
+create type property_status as enum ('sold', 'for rent', 'alive');
 create type moderation_status as enum ('created', 'approved', 'declined', 'on moderation');
 
 create table public.property (
