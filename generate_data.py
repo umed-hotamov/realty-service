@@ -6,9 +6,9 @@ from faker import Faker
 fake = Faker()
 
 insert_user          = 'insert into public.user (id, email, password, phone, role) values\n'
-insert_property      = 'insert into public.property (id, owner_id, type, offer, price, p_status, m_status) values\n'
-insert_flat          = 'insert into public.flat (id, property_id, house_id, flat_number, rooms, square) values\n'
-insert_private_house = 'insert into public.private_house (id, property_id, address, rooms, square) values\n'
+insert_property      = 'insert into public.property (id, owner_id, type, offer, p_status, m_status, price, rooms, square) values\n'
+insert_flat          = 'insert into public.flat (id, property_id, house_id, flat_number) values\n'
+insert_private_house = 'insert into public.private_house (id, property_id, address) values\n'
 insert_building      = 'insert into public.apartment_building (id, year_built, address, developer) values\n'
 insert_listing       = 'insert into public.listing (id, user_id, property_id, title, description, status, created_at) values\n'
 
@@ -53,9 +53,11 @@ def construct_property_data():
             owner_id=random.choice(users)['id'],
             type=random.choice(property_type),
             offer=random.choice(offer_type),
-            price=random.randint(10000, 10000000),
             p_status=random.choice(property_status),
-            m_status=random.choice(moderation_status)
+            m_status=random.choice(moderation_status),
+            price=random.randint(10000, 10000000),
+            rooms = random.randint(5, 10),
+            square = random.randint(50, 100),
             )
 
 
@@ -65,8 +67,6 @@ def construct_flat_data(property_id):
             property_id=property_id,
             house_id=random.choice(buildings)['id'],
             flat_number = random.randint(1, 50),
-            rooms = random.randint(1, 5),
-            square = random.randint(10, 100),
             )
 
 
@@ -75,24 +75,21 @@ def construct_private_house_data(property_id):
             id=uuid.uuid4(),
             property_id=property_id,
             address=fake.address(),
-            rooms = random.randint(5, 10),
-            square = random.randint(50, 100),
             )
 
 
 def add_property_insert_values(property):
     return f"('{property['id']}', '{property['owner_id']}', '{property['type']}', '{property['offer']}', "\
-                      f"'{property['price']}', '{property['p_status']}', '{property['m_status']}'),\n"
+                      f"'{property['p_status']}', '{property['m_status']}', '{property['price']}', "\
+                      f"'{property['rooms']}', '{property['square']}'),\n"
 
 
 def add_flat_insert_values(flat):
-    return f"('{flat['id']}', '{flat['property_id']}', '{flat['house_id']}', '{flat['flat_number']}', "\
-                      f"'{flat['rooms']}', '{flat['square']}'),\n"
+    return f"('{flat['id']}', '{flat['property_id']}', '{flat['house_id']}', '{flat['flat_number']}'),\n"
 
 
 def add_private_house_insert_values(private_house):
-    return f"('{private_house['id']}', '{private_house['property_id']}', '{private_house['address']}', "\
-                      f"'{private_house['rooms']}', '{private_house['square']}'),\n"
+    return f"('{private_house['id']}', '{private_house['property_id']}', '{private_house['address']}'),\n"
 
 
 def generate_property(property_num):
