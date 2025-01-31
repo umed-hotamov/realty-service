@@ -16,7 +16,7 @@ user_roles        = ['seller', 'moderator']
 offer_type        = ['rent', 'sale']
 property_type     = ['flat', 'private_house']
 moderation_status = ['on moderation']
-property_status   = ['none']
+property_status   = ['alive']
 
 users = []
 properties = []
@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--users', type=int, default=2, help='generate users')
     parser.add_argument('--buildings', type=int, default=10, help='genereate buildings')
-    parser.add_argument('--properties', type=int, default=2, help='generate properties')
+    parser.add_argument('--properties', type=int, default=5, help='generate properties')
     parser.add_argument('--listings', type=int, default=2, help='generate listings')
     parser.add_argument('--file', type=str, default='insert.sql', help='destination file')
 
