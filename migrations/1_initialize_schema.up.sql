@@ -18,9 +18,11 @@ create table public.property (
   owner_id uuid not null,
   type property_type not null,
   offer offer_type not null,
-  price numeric not null,
   p_status property_status,
   m_status moderation_status not null,
+  price numeric not null,
+  rooms integer not null,
+  square numeric not null,
   foreign key (owner_id) references public.user(id) on delete cascade
 );
 
@@ -36,8 +38,6 @@ create table public.flat (
   property_id uuid unique not null,
   house_id uuid not null,
   flat_number integer not null,
-  rooms integer not null,
-  square numeric not null,
   foreign key (property_id) references public.property(id) on delete cascade,
   foreign key (house_id) references public.apartment_building(id) on delete cascade
 );
@@ -46,8 +46,6 @@ create table public.private_house (
   id uuid primary key,
   property_id uuid unique not null,
   address varchar(255) not null,
-  rooms integer not null,
-  square numeric not null,
   foreign key (property_id) references public.property(id) on delete cascade
 );
 
