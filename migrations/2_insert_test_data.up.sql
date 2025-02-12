@@ -1,49 +1,67 @@
-insert into public.user (id, email, password, phone, role) values
-('368cd392-489d-4601-b4d8-3cd2f2403272', 'tammie90@example.org', 'B_H(1OflO@', '(433)776-2116x147', 'moderator'),
-('d3908aa0-ac19-479c-ad89-dd9b942e8b59', 'hubbardbrenda@example.org', '894KnWXp_2', '+1-958-591-9238x376', 'moderator');
+INSERT INTO public.user (id, role, name, surname, email, password, phone)
+VALUES
+('46bf6f7c-4f64-4134-81a4-0d9b5cb447c5', 'private_person', 'Brenda Mann', 'Melissa Perez', 'nsanchez@example.com', '_7PBgH5uZ7', '824-552-6702x52146'),
+('ed15d801-c7dd-47b3-b6e5-7dc0097020fe', 'private_person', 'Lynn Lopez', 'Julie Tate', 'michelleewing@example.org', 'F62&2TJfbG', '+1-530-928-7150x412');
 
-insert into public.apartment_building (id, year_built, address, developer) values
-('691f65a9-97b9-422f-9679-09f7dd43d827', '2015', '30499 Matthew Locks
-Lake Zachary, FL 81163', 'Daniel Gomez'),
-('ecb0bec3-7d02-44ff-923d-4fc76c84d738', '1976', '66880 Johnson Stravenue
-New Jennifer, OH 69383', 'Meagan Garrett'),
-('87d0c6bd-69f9-4655-b97e-dba421b78012', '2015', 'USCGC Cook
-FPO AA 66985', 'Nicole Rodriguez'),
-('922efb0e-fd07-4657-a7a4-4426dbce3207', '2020', '0525 Kayla Dale Apt. 196
-Samanthaville, MO 54561', 'David Pruitt'),
-('38c80a59-6854-4d03-b740-59c821b0b5ba', '2011', '3098 Choi Union Suite 599
-Rushborough, MN 08288', 'Kirk Perry'),
-('0ba7b176-32ae-4716-a7e1-6d00b481afb2', '2018', '69811 Kyle Streets
-New Clintonhaven, VI 27695', 'William Freeman'),
-('30563eab-5205-41eb-a22c-dfb9809ef238', '1991', '0684 Vargas Station Apt. 005
-Tamaramouth, AS 07376', 'Dustin Morgan'),
-('cc67dfa6-9dd6-4760-b13f-7a6557c41fc4', '1975', '14852 Lee Crossing
-Lake Toddport, DC 89257', 'Nathaniel Smith'),
-('b3d435af-a4a3-41df-b44d-78d51cec08f0', '2008', '362 Martinez Mall Apt. 745
-East Dennisland, ID 11902', 'Amanda King'),
-('9ac8f55a-a9ff-49e6-9702-7b2befe70f96', '2004', '238 Fry Spurs
-North Angela, PW 56164', 'Christopher Thompson');
+INSERT INTO public.apartment_building (id, type)
+VALUES
+('012b36fd-472c-49a5-9c45-ca46bfcef337', 'secondary'),
+('99bf794d-94b9-4c33-88cf-d39670279e1c', 'new'),
+('36c1dd19-570c-4c41-af9b-6c9cab1f4c44', 'secondary'),
+('cdaf2027-32e8-4567-b5d1-d2220d7864a1', 'secondary'),
+('26012eb0-7a4d-425b-9b13-5e2d37494eaf', 'secondary'),
+('c5434720-ac72-453b-b28f-6e8b31b6b89f', 'secondary'),
+('2093519c-7e20-421d-a5a8-79770ab6a243', 'secondary'),
+('932364c7-dedb-44d2-8d55-408a8957df52', 'new'),
+('3f54aaa5-e6c1-44c5-ab9e-4796a5ab6986', 'secondary'),
+('2dba779f-22ba-4c35-a59b-147bcf4d0159', 'new');
 
-insert into public.property (id, owner_id, type, offer, p_status, m_status, price, rooms, square) values
-('aa5bcafb-59eb-4996-baae-0bb86c75021d', '368cd392-489d-4601-b4d8-3cd2f2403272', 'private_house', 'sale', 'alive', 'on moderation', '3387611', '10', '60'),
-('30c623b2-0d76-4cc7-bdc0-969918b82540', '368cd392-489d-4601-b4d8-3cd2f2403272', 'private_house', 'sale', 'alive', 'on moderation', '1827562', '8', '68'),
-('2966e123-bdfb-4421-844d-74475b4fa872', 'd3908aa0-ac19-479c-ad89-dd9b942e8b59', 'flat', 'sale', 'alive', 'on moderation', '2029864', '5', '89'),
-('05b85c7e-a00c-4a4b-88d6-8bbfd0515c95', '368cd392-489d-4601-b4d8-3cd2f2403272', 'private_house', 'sale', 'alive', 'on moderation', '4219774', '10', '68'),
-('fe83b323-719c-4fff-bff9-f9f316058555', '368cd392-489d-4601-b4d8-3cd2f2403272', 'flat', 'sale', 'alive', 'on moderation', '2246826', '6', '89');
+INSERT INTO public.building_details (building_id, address, developer, floors, construction_year, parking_place)
+VALUES
+('012b36fd-472c-49a5-9c45-ca46bfcef337', 'PSC 5197, Box 8806
+APO AA 20964', 'Elizabeth Ramirez', 11, 1977, 'True'),
+('99bf794d-94b9-4c33-88cf-d39670279e1c', '7714 Hoover Forge
+New Jeffrey, GU 38628', 'Kelly Wilkinson', 9, 1975, 'True'),
+('36c1dd19-570c-4c41-af9b-6c9cab1f4c44', '5122 Phillips Landing
+South Christopher, TX 71227', 'Bradley Figueroa', 7, 1971, 'True'),
+('cdaf2027-32e8-4567-b5d1-d2220d7864a1', '218 Alison Common
+East Heatherside, SC 89415', 'Kenneth Jones', 9, 1992, 'True'),
+('26012eb0-7a4d-425b-9b13-5e2d37494eaf', '7972 Shane Knolls
+North Travisland, NY 41149', 'Julie Walker', 1, 2016, 'True'),
+('c5434720-ac72-453b-b28f-6e8b31b6b89f', '816 Rodney Streets
+Wilsonport, GU 20122', 'James Perry', 15, 1991, 'True'),
+('2093519c-7e20-421d-a5a8-79770ab6a243', '6460 Nicole Squares Apt. 606
+Ashleyhaven, SD 32591', 'Spencer Stewart', 15, 1981, 'True'),
+('932364c7-dedb-44d2-8d55-408a8957df52', '03369 Rhonda Row Suite 923
+West Samantha, KY 11248', 'Megan Arellano', 20, 1978, 'False'),
+('3f54aaa5-e6c1-44c5-ab9e-4796a5ab6986', '81820 Rios Expressway
+South Joshuatown, AZ 43365', 'John Fernandez', 10, 2014, 'True'),
+('2dba779f-22ba-4c35-a59b-147bcf4d0159', '065 Brown Highway
+East Chelsea, PA 59386', 'Michelle Garcia MD', 13, 1972, 'False');
 
-insert into public.private_house (id, property_id, address) values
-('0545cd31-c7a7-4761-b541-2d7e2a3fd61a', 'aa5bcafb-59eb-4996-baae-0bb86c75021d', 'USNS Miranda
-FPO AE 50435'),
-('7e6b0382-1e11-418b-878f-6cd22ab94ef2', '30c623b2-0d76-4cc7-bdc0-969918b82540', '6986 Thomas Drive
-Parkview, PR 72373'),
-('7f42fc27-cf46-4de7-8575-10b4eca592ce', '05b85c7e-a00c-4a4b-88d6-8bbfd0515c95', '04809 Contreras Ways Suite 402
-Churchmouth, PR 30125');
+INSERT INTO public.property (id, owner_id, property_type, building_id, house_type)
+VALUES
+('04d88736-785c-409b-9962-95c7a0703fea', 'ed15d801-c7dd-47b3-b6e5-7dc0097020fe', 'apartment', '2dba779f-22ba-4c35-a59b-147bcf4d0159', NULL),
+('b83f81eb-d4c5-4f2c-86b6-cee101c9bcbc', 'ed15d801-c7dd-47b3-b6e5-7dc0097020fe', 'apartment', '932364c7-dedb-44d2-8d55-408a8957df52', NULL),
+('099499e3-9349-4c8c-b072-1e5efface117', '46bf6f7c-4f64-4134-81a4-0d9b5cb447c5', 'apartment', 'c5434720-ac72-453b-b28f-6e8b31b6b89f', NULL),
+('b4487938-1c31-4855-8f3b-9f52c936c0f9', '46bf6f7c-4f64-4134-81a4-0d9b5cb447c5', 'apartment', '2093519c-7e20-421d-a5a8-79770ab6a243', NULL),
+('07a4117c-148e-4f13-a964-f92ed6f7e7da', 'ed15d801-c7dd-47b3-b6e5-7dc0097020fe', 'house', NULL, 'cottage');
 
-insert into public.flat (id, property_id, house_id, flat_number) values
-('19e8794f-ef5a-492c-b406-87b751d35b31', '2966e123-bdfb-4421-844d-74475b4fa872', '38c80a59-6854-4d03-b740-59c821b0b5ba', '2'),
-('dfdc750f-66c1-461a-a26b-71d88a062cc9', 'fe83b323-719c-4fff-bff9-f9f316058555', '87d0c6bd-69f9-4655-b97e-dba421b78012', '40');
+INSERT INTO public.property_details (property_id, address, apartment_number, floors, rooms, area)
+VALUES
+('04d88736-785c-409b-9962-95c7a0703fea', '653 Michael Lodge
+New Emily, DC 89455', 94, 0, 4, 36),
+('b83f81eb-d4c5-4f2c-86b6-cee101c9bcbc', '0632 Lynch Manors Suite 801
+North Brendaport, AL 35059', 93, 0, 2, 44),
+('099499e3-9349-4c8c-b072-1e5efface117', '563 Mendez Spring
+Timothyside, AS 11953', 90, 0, 3, 67),
+('b4487938-1c31-4855-8f3b-9f52c936c0f9', '1616 Brandon Road
+West Danielland, CT 80189', 48, 0, 4, 71),
+('07a4117c-148e-4f13-a964-f92ed6f7e7da', '76756 Christian Ford Suite 528
+North Tracy, SC 79304', 0, 3, 5, 105);
 
-insert into public.listing (id, user_id, property_id, title, description, status, created_at) values
-('b94761a4-dd4b-494e-90e6-1a58c77d66e0', 'd3908aa0-ac19-479c-ad89-dd9b942e8b59', '05b85c7e-a00c-4a4b-88d6-8bbfd0515c95', 'Total.', 'Many prove day better I wind.', 'on moderation', '2024-12-08 05:13:25'),
-('bcd2062c-7820-4800-adf9-a72a11bb2355', '368cd392-489d-4601-b4d8-3cd2f2403272', 'aa5bcafb-59eb-4996-baae-0bb86c75021d', 'Stuff.', 'Race poor sea set everyone always contain.', 'on moderation', '2024-08-08 11:54:20');
+INSERT INTO public.listing (id, user_id, property_id, title, city, offer, price, description, status)
+VALUES
+('e18765bb-eb52-4be8-ac4b-dfb402f057a4', 'ed15d801-c7dd-47b3-b6e5-7dc0097020fe', '07a4117c-148e-4f13-a964-f92ed6f7e7da', 'Modern.', 'West Jason', 'rent', 117955, 'Get how argue section middle.', 'for_rent'),
+('d79dede0-21e4-4930-8aa9-529de4ef3f2d', '46bf6f7c-4f64-4134-81a4-0d9b5cb447c5', '04d88736-785c-409b-9962-95c7a0703fea', 'Economy.', 'Rojasbury', 'rent', 902607, 'Machine us cell real certainly.', 'for_rent');
 
