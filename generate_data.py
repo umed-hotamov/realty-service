@@ -5,36 +5,62 @@ from faker import Faker
 
 fake = Faker()
 
-insert_user          = 'insert into public.user (id, email, password, phone, role) values\n'
-insert_property      = 'insert into public.property (id, owner_id, type, offer, p_status, m_status, price, rooms, square) values\n'
-insert_flat          = 'insert into public.flat (id, property_id, house_id, flat_number) values\n'
-insert_private_house = 'insert into public.private_house (id, property_id, address) values\n'
-insert_building      = 'insert into public.apartment_building (id, year_built, address, developer) values\n'
-insert_listing       = 'insert into public.listing (id, user_id, property_id, title, description, status, created_at) values\n'
+insert_user = """
+INSERT INTO public.user (id, role, name, surname, email, password, phone)
+VALUES
+"""
 
-user_roles        = ['seller', 'moderator']
-offer_type        = ['rent', 'sale']
-property_type     = ['flat', 'private_house']
-moderation_status = ['on moderation']
-property_status   = ['alive']
+insert_property = """
+INSERT INTO public.property (id, owner_id, property_type, building_id, house_type)
+VALUES
+"""
+
+insert_property_details = """
+INSERT INTO public.property_details (property_id, address, apartment_number, floors, rooms, area)
+VALUES
+"""
+
+insert_building = """
+INSERT INTO public.apartment_building (id, type)
+VALUES
+"""
+
+insert_building_details = """
+INSERT INTO public.building_details (building_id, address, developer, floors, construction_year, parking_place)
+VALUES
+"""
+
+insert_listing = """
+INSERT INTO public.listing (id, user_id, property_id, title, city, offer, price, description, status)
+VALUES
+"""
+
+user_roles = ['realtor', 'agency', 'private_person']
+offer_type = ['rent', 'sale']
+property_types = ['apartment', 'house']
+house_types = ['cottage', 'country_house', 'townhouse', 'tiny_home']
+listing_status = ['sold', 'for_rent', 'available', 'draft']
+building_types = ['new', 'secondary']
 
 users = []
 properties = []
 buildings = []
 
-
 def construct_user_data():
     return dict(
             id=uuid.uuid4(),
+            role=random.choice(user_roles),
+            name=fake.name(),
+            surname=fake.name(),
             email=fake.email(),
             password=fake.password(),
             phone=fake.phone_number(),
-            role=random.choice(user_roles),
             )
 
 
 def add_user_insert_values(user):
-    return f"('{user['id']}', '{user['email']}', '{user['password']}', '{user['phone']}', '{user['role']}'),\n"
+    return f"('{user['id']}', '{user['role']}', '{user['name']}', '{user['surname']}', "\
+           f"'{user['email']}', '{user['password']}', '{user['phone']}'),\n"
 
 
 def generate_user(user_num):
@@ -48,48 +74,35 @@ def generate_user(user_num):
 
 
 def construct_property_data():
+    property_type = random.choice(property_types)
     return dict(
             id=uuid.uuid4(),
             owner_id=random.choice(users)['id'],
-            type=random.choice(property_type),
-            offer=random.choice(offer_type),
-            p_status=random.choice(property_status),
-            m_status=random.choice(moderation_status),
-            price=random.randint(10000, 10000000),
-            rooms = random.randint(5, 10),
-            square = random.randint(50, 100),
+            property_type=property_type,
+            building_id=f"'{random.choice(buildings)['id']}'" if property_type == 'apartment' else 'NULL',
+            house_type=f"'{random.choice(house_types)}'" if property_type == 'house' else 'NULL',
             )
 
 
-def construct_flat_data(property_id):
+def construct_property_details(property):
     return dict(
-            id=uuid.uuid4(),
-            property_id=property_id,
-            house_id=random.choice(buildings)['id'],
-            flat_number = random.randint(1, 50),
-            )
-
-
-def construct_private_house_data(property_id):
-    return dict(
-            id=uuid.uuid4(),
-            property_id=property_id,
-            address=fake.address(),
-            )
+        property_id=property['id'],
+        address=fake.address(),
+        apartment_number=random.randint(1, 100) if property['property_type'] == 'apartment' else 0,
+        floors=random.randint(1, 5) if property['property_type'] == 'house' else 0,
+        rooms=random.randint(1, 6),
+        area=random.randint(30, 200),
+    )
 
 
 def add_property_insert_values(property):
-    return f"('{property['id']}', '{property['owner_id']}', '{property['type']}', '{property['offer']}', "\
-                      f"'{property['p_status']}', '{property['m_status']}', '{property['price']}', "\
-                      f"'{property['rooms']}', '{property['square']}'),\n"
+    return f"('{property['id']}', '{property['owner_id']}', '{property['property_type']}', {property['building_id']}, "\
+                      f"{property['house_type']}),\n"
 
 
-def add_flat_insert_values(flat):
-    return f"('{flat['id']}', '{flat['property_id']}', '{flat['house_id']}', '{flat['flat_number']}'),\n"
-
-
-def add_private_house_insert_values(private_house):
-    return f"('{private_house['id']}', '{private_house['property_id']}', '{private_house['address']}'),\n"
+def add_property_details_insert_values(property_details):
+    return f"('{property_details['property_id']}', '{property_details['address']}', {property_details['apartment_number']}, {property_details['floors']}, "\
+                     f"{property_details['rooms']}, {property_details['area']}),\n"
 
 
 def generate_property(property_num):
@@ -100,61 +113,58 @@ def generate_property(property_num):
         property_stmt += add_property_insert_values(property)
     property_stmt = property_stmt.strip(',\n') + ';\n\n'
 
-    flat_stmt = ''
-    private_house_stmt = ''    
+    details_stmt = insert_property_details
     for p in properties:
-        if p['type'] == 'flat':
-            if not flat_stmt:
-                flat_stmt = insert_flat
-            flat = construct_flat_data(p['id'])
-            flat_stmt += add_flat_insert_values(flat)
-        else:
-            if not private_house_stmt:
-                private_house_stmt = insert_private_house
-            private_house = construct_private_house_data(p['id'])
-            private_house_stmt += add_private_house_insert_values(private_house)
+        details = construct_property_details(p)
+        details_stmt += add_property_details_insert_values(details)
+    details_stmt = details_stmt.strip(',\n') + ';\n\n'
 
-    if flat_stmt:
-        flat_stmt = flat_stmt.strip(',\n') + ';\n\n'
-    if private_house_stmt:
-        private_house_stmt = private_house_stmt.strip(',\n') + ';\n\n'
-
-    return property_stmt + private_house_stmt + flat_stmt 
+    return property_stmt + details_stmt  
 
 
 def construct_building_data():
     return dict(
-            id=uuid.uuid4(),
-            year_built=fake.year(),
-            address=fake.address(),
-            developer=fake.name(),
-            )
+        id=uuid.uuid4(),
+        type=random.choice(building_types),
+    )
+
+
+def construct_building_details(building_id):
+    return dict(
+        building_id=building_id,
+        address=fake.address(),
+        developer=fake.name(),
+        floors=random.randint(1, 20),
+        construction_year=fake.year(),
+        parking_place=fake.boolean()
+    )
 
 
 def add_building_insert_values(building):
-    return f"('{building['id']}', '{building['year_built']}', '{building['address']}', "\
-                      f"'{building['developer']}'),\n"
+   return f"('{building['id']}', '{building['type']}'),\n"
+
+
+def add_building_details_insert_values(building_details):
+    return f"('{building_details['building_id']}', '{building_details['address']}', '{building_details['developer']}', " \
+                     f"{building_details['floors']}, {building_details['construction_year']}, '{building_details['parking_place']}'),\n"
 
 
 def generate_building(building_num):
-    stmt = insert_building
+    building_stmt = insert_building
     for _ in range(building_num):
         building = construct_building_data()
         buildings.append(building)
-        stmt += add_building_insert_values(building)
+        building_stmt += add_building_insert_values(building)
+    building_stmt = building_stmt.strip(',\n') + ';\n\n'
 
-    return stmt.strip(',\n') + ';\n\n'
+    details_stmt = insert_building_details
+    for b in buildings:
+        details = construct_building_details(b['id'])
+        details_stmt += add_building_details_insert_values(details)
+    details_stmt = details_stmt.strip(',\n') + ';\n\n'
+        
 
-
-def get_random_timestamp():
-    random_timestamp = fake.date_time_between(
-    start_date="-1y",
-    end_date="now",  
-    tzinfo=None      
-    )
-
-    return random_timestamp.strftime("%Y-%m-%d %H:%M:%S")
-
+    return building_stmt + details_stmt
 
 
 def construct_listing_data():
@@ -163,15 +173,18 @@ def construct_listing_data():
             user_id=random.choice(users)['id'],
             property_id=random.choice(properties)['id'],
             title=fake.text(max_nb_chars=10),
+            city=fake.city(),
+            offer=random.choice(offer_type),
+            price=random.randint(10000, 1000000),
             description=fake.text(max_nb_chars=50),
-            status=random.choice(moderation_status),
-            created_at=get_random_timestamp()
+            status=random.choice(listing_status),
             )
 
 
 def add_listing_insert_values(listing):
     return f"('{listing['id']}', '{listing['user_id']}', '{listing['property_id']}', "\
-            f"'{listing['title']}', '{listing['description']}', '{listing['status']}', '{listing['created_at']}'),\n"
+            f"'{listing['title']}', '{listing['city']}', '{listing['offer']}', "\
+            f"{listing['price']}, '{listing['description']}', '{listing['status']}'),\n"
 
 
 def generate_listing(listing_num):
