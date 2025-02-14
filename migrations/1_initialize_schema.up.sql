@@ -23,8 +23,8 @@ create type property_type as enum('apartment', 'house');
 create table public.property (
   id uuid primary key,
   owner_id uuid not null,
-  property_type property_type not null,
   building_id uuid,
+  property_type property_type not null,
   house_type house_type,
   foreign key (owner_id) references public.user(id) on delete cascade,
   foreign key (building_id) references public.apartment_building(id) on delete cascade

@@ -11,7 +11,7 @@ VALUES
 """
 
 insert_property = """
-INSERT INTO public.property (id, owner_id, property_type, building_id, house_type)
+INSERT INTO public.property (id, owner_id, building_id, property_type, house_type)
 VALUES
 """
 
@@ -78,8 +78,8 @@ def construct_property_data():
     return dict(
             id=uuid.uuid4(),
             owner_id=random.choice(users)['id'],
-            property_type=property_type,
             building_id=f"'{random.choice(buildings)['id']}'" if property_type == 'apartment' else 'NULL',
+            property_type=property_type,
             house_type=f"'{random.choice(house_types)}'" if property_type == 'house' else 'NULL',
             )
 
@@ -96,7 +96,7 @@ def construct_property_details(property):
 
 
 def add_property_insert_values(property):
-    return f"('{property['id']}', '{property['owner_id']}', '{property['property_type']}', {property['building_id']}, "\
+    return f"('{property['id']}', '{property['owner_id']}', {property['building_id']}, '{property['property_type']}', "\
                       f"{property['house_type']}),\n"
 
 
