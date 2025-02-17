@@ -1,38 +1,45 @@
 package domain
 
-type PropertyUnit interface{}
+type PropertyType     int
+type HouseType        int
+type BuildingType     int 
+
+const (
+  Apartment    PropertyType = iota
+  House
+  
+  Cottage      HouseType = iota
+  CountryHouse
+  TownHouse
+  TinyHome
+
+  New          BuildingType = iota
+  Secondary 
+)
 
 type Property struct {
-  ID        int
-  UserID    int
-  Type      bool
-  OfferType bool
-  Price     int
-  Status    int
-  Unit      PropertyUnit
+  ID           ID
+  OwnerID      ID
+  BuildingID   ID
+  PropertyType PropertyType
+  HouseType    HouseType
 }
 
-type PropertyFilter struct {
-  Type     bool
-  MinPrice int
-  MaxPrice int
-  Address  string
-} 
-
-type Flat struct {
-  ID         int
-  HouseID    int
-  PropertyID int
-  Number     int
-  Price      int
-  Rooms      int
-  Square     int
+type PropertyDetails struct {
+  PropertyID      ID
+  Address         string
+  ApartmentNumber int
+  Floors          int
+  Rooms           int
+  Area            int
 }
 
-type PrivateHouse struct {
-  ID         int
-  PropertyID int
-  Address    string
-  Rooms      int
-  Square     int
+type BuildingDetails struct {
+  BuildingID       ID
+  BuildingType     BuildingType
+  Address          string
+  Developer        string
+  Floors           int
+  ConstructionYear int
+  ParkingPlace     bool
 }

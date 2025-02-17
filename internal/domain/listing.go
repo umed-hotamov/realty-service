@@ -1,14 +1,26 @@
 package domain
 
-import "time"
+type OfferType int 
+type ListingStatusType int
+
+const (
+  Rent OfferType = iota
+  Sale
+
+  Available ListingStatusType = iota
+  Sold 
+  ForRent
+  Draft
+)
 
 type Listing struct {
-  ID          int
-  UserID      int
-  PropertyID  int
+  ID          ID
+  UserID      ID
+  PropertyID  ID
   Title       string
+  City        string
+  Offer       OfferType
+  Price       int
   Description string
-  Status      int
-  CreatedAt   time.Time
-  UpdatedAt   time.Time
+  Status      ListingStatusType
 }

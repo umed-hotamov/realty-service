@@ -3,14 +3,17 @@ package domain
 type UserRole int
 
 const (
-  Seller UserRole = iota
-  Moderator
+  Realtor       UserRole = iota
+  Agency
+  PrivatePerson
 )
 
 type User struct {
   ID       ID
+  Role     UserRole
+  Name     string
+  Surname  string
   Email    string
   Password string
   Phone    string
-  Role     UserRole
 }
