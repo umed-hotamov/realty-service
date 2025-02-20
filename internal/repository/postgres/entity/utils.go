@@ -11,7 +11,8 @@ func EntityColumns(entity interface{}) []string {
 	if v.Kind() == reflect.Ptr {
 		v = v.Elem()
 	}
-	var fields []string
+	
+  var fields []string
 	if v.Kind() == reflect.Struct {
 		for i := 0; i < v.NumField(); i++ {
 			field := v.Type().Field(i).Tag.Get("db")
@@ -31,11 +32,13 @@ func EntityColumns(entity interface{}) []string {
 func UpdateQueryString(entity interface{}, tableName string) string {
 	columnNames := EntityColumns(entity)
 	params := make([]string, len(columnNames))
-	for i, columnName := range columnNames {
+	
+  for i, columnName := range columnNames {
 		params[i] = fmt.Sprintf("%s = :%s", columnName, columnName)
 	}
 	paramsString := strings.Join(params, ", ")
-	return fmt.Sprintf("UPDATE public.%s SET %s WHERE id = :id",
+	
+  return fmt.Sprintf("UPDATE public.%s SET %s WHERE id = :id",
 		tableName, paramsString)
 }
 
