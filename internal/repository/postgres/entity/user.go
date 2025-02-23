@@ -43,3 +43,27 @@ func (u *PostgresUser) ToDomain() domain.User {
     Phone:    u.Phone,
   }
 }
+
+func NewPostgresUser(user domain.User) PostgresUser {
+  id, _ := uuid.Parse(user.ID.String())
+  
+  var role string
+  switch user.Role {
+  case domain.Realtor:
+    role = RoleRealtor
+  case domain.Agency:
+    role = RoleAgency
+  case domain.PrivatePerson:
+    role = RolePrivatePerson 
+  }
+
+  return PostgresUser{
+    ID:       id,
+    Role:     role,
+    Name:     user.Name,
+    Surname:  user.Surname,
+    Email:    user.Email,
+    Password: user.Password,
+    Phone:    user.Phone,
+  }
+}
