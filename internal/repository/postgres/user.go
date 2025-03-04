@@ -111,7 +111,7 @@ func (u *PostgresUserRepo) Update(ctx context.Context, user domain.User) (domain
   return u.GetByID(ctx, user.ID)
 }
   
-func (u *PostgresUserRepo) Delete(ctx context.Context, userID int) error {
+func (u *PostgresUserRepo) Delete(ctx context.Context, userID domain.ID) error {
   _, err := u.db.ExecContext(ctx, UserDelete, userID)
   if err != nil {
     return err
