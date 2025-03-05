@@ -17,12 +17,11 @@ type IUserRepo interface {
 
 type IPropertyRepo interface {
   GetAll(ctx context.Context) ([]domain.Property, error)
-  GetPropertiesByAddress(ctx context.Context, address string) ([]domain.Property, error)
+  GetPropertyByID(ctx context.Context, propertyID domain.ID) (domain.Property, error)
   GetUserProperties(ctx context.Context, userID domain.ID) ([]domain.Property, error)
-  GetPropertyDetails(ctx context.Context, propertyID domain.ID) (domain.Property, error)
-  Create(ctx context.Context, property domain.Property) (domain.Property, error)
+  Create(ctx context.Context, property domain.Property, details domain.PropertyDetails) (domain.Property, error)
   Update(ctx context.Context, property domain.Property) (domain.Property, error)
-  Delete(ctx context.Context, property domain.Property) error
+  Delete(ctx context.Context, propertyID domain.ID) error
 }
 
 type IListingRepo interface {
