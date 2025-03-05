@@ -18,11 +18,12 @@ const (
 )
 
 type Property struct {
-  ID           ID
-  OwnerID      ID
-  BuildingID   ID
-  PropertyType PropertyType
-  HouseType    HouseType
+  ID              ID
+  OwnerID         ID
+  PropertyType    PropertyType
+  HouseType       HouseType
+  PropertyDetails PropertyDetails
+  BuildingDetails BuildingDetails
 }
 
 type PropertyDetails struct {
