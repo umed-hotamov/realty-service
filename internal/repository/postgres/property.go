@@ -28,6 +28,7 @@ const (
   SelectApartment       = "SELECT * FROM public.apartment_building WHERE id = $1"
   SelectUserProperties  = "SELECT * FROM public.property WHERE owner_id = $1"
   SelectPropertyByID    = "SELECT * FROM public.property WHERE id = $1"
+  PropertyDelete        = "DELETE FROM public.property WHERE id = $1"
   SelectBuildingDetails = "SELECT * FROM public.building_details bd" +
                           "JOIN public.property p ON p.building_id = bd.id" +
                           "WHERE bd.id = $1"
@@ -210,4 +211,13 @@ func (p *PgPropertyRepo) Create(ctx context.Context, property domain.Property, d
   }
 
   return p.GetPropertyByID(ctx, property.ID)
+}
+
+func (p *PgPropertyRepo) Delete(ctx context.Context, propertyID domain.ID) error {
+  _, err := p.db.ExecContext(ctx, PropertyDelete, propertyID)
+  if err != nil {
+    return err
+  }
+
+  return nil
 }

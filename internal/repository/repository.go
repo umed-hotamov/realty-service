@@ -26,6 +26,7 @@ type IPropertyRepo interface {
 
 type IListingRepo interface {
   GetAll(ctx context.Context) ([]domain.Listing, error)
+  GetListingByID(ctx context.Context, id domain.ID) (domain.Listing, error)
   GetUserListings(ctx context.Context, userID int) ([]domain.Listing, error)
   Create(ctx context.Context, listing domain.Listing) (domain.Listing, error)
   Update(ctx context.Context, listing domain.Listing) (domain.Listing, error)
