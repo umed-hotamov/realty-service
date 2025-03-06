@@ -3,12 +3,13 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 	"github.com/umed-hotamov/realty-service/internal/domain"
 	"github.com/umed-hotamov/realty-service/internal/repository/postgres/entity"
+	"github.com/umed-hotamov/realty-service/internal/errs"
 )
 
 type PostgresUserRepo struct {
@@ -34,9 +35,9 @@ func (u *PostgresUserRepo) GetAll(ctx context.Context) ([]domain.User, error) {
   err := u.db.SelectContext(ctx, &pgUsers, UserSelectAll)
   if err != nil {
     if err == sql.ErrNoRows {
-      return nil, err
+      return nil, errors.Wrap(errs.ErrNotExist, err.Error())
     }
-    return nil, err
+    return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
   }
 
   users := make([]domain.User, len(pgUsers))
@@ -53,9 +54,9 @@ func (u *PostgresUserRepo) GetByID(ctx context.Context, id domain.ID) (domain.Us
   err := u.db.GetContext(ctx, &pgUser, UserSelectByID, id)
   if err != nil {
     if err == sql.ErrNoRows {
-      return domain.User{}, err
+      return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
     }
-    return domain.User{}, err
+    return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
   }
 
   return pgUser.ToDomain(), nil
@@ -67,9 +68,9 @@ func (u *PostgresUserRepo) GetByRole(ctx context.Context, role domain.UserRole) 
   err := u.db.SelectContext(ctx, &pgUsers, UserSelectByRole)
   if err != nil {
     if err == sql.ErrNoRows {
-      return nil, err
+      return nil, errors.Wrap(errs.ErrNotExist, err.Error())
     }
-    return nil, err
+    return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
   }
 
   users := make([]domain.User, len(pgUsers))
@@ -89,9 +90,9 @@ func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain
     var pgErr *pgconn.PgError
     if errors.As(err, &pgErr) {
       if pgErr.Code == PgUniqueViolationCode {
-        return domain.User{}, nil
+        return domain.User{}, errors.Wrap(errs.ErrDuplicate, err.Error())
       } else {
-        return domain.User{}, nil
+        return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
       }
     }
   }
@@ -105,7 +106,7 @@ func (u *PostgresUserRepo) Update(ctx context.Context, user domain.User) (domain
 
   _, err := u.db.NamedExecContext(ctx, query, pgUser)
   if err != nil {
-    return domain.User{}, nil
+    return domain.User{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
   }
 
   return u.GetByID(ctx, user.ID)
@@ -114,7 +115,7 @@ func (u *PostgresUserRepo) Update(ctx context.Context, user domain.User) (domain
 func (u *PostgresUserRepo) Delete(ctx context.Context, userID domain.ID) error {
   _, err := u.db.ExecContext(ctx, UserDelete, userID)
   if err != nil {
-    return err
+    return errors.Wrap(errs.ErrDeleteFailed, err.Error())
   }
 
   return nil
