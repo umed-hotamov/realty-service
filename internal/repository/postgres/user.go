@@ -94,6 +94,8 @@ func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain
       } else {
         return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
       }
+    } else {
+      return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
     }
   }
 

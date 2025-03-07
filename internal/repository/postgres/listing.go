@@ -3,11 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 	"github.com/umed-hotamov/realty-service/internal/domain"
+	"github.com/umed-hotamov/realty-service/internal/errs"
 	"github.com/umed-hotamov/realty-service/internal/repository/postgres/entity"
 )
   
@@ -36,9 +37,9 @@ func (l *PgListingRepo) GetAll(ctx context.Context) ([]domain.Listing, error) {
   err := l.db.SelectContext(ctx, &pgListings, getAll)
   if err != nil {
     if err == sql.ErrNoRows {
-      return nil, err
+      return nil, errors.Wrap(errs.ErrNotExist, err.Error())
     }
-    return nil, err
+    return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
   }
 
   listings := make([]domain.Listing, len(pgListings))
@@ -55,9 +56,9 @@ func (l *PgListingRepo) GetUserListings(ctx context.Context, userID int) ([]doma
   err := l.db.SelectContext(ctx, &pgListings, getByUserID, userID)
   if err != nil {
     if err == sql.ErrNoRows {
-      return nil, err
+      return nil, errors.Wrap(errs.ErrNotExist, err.Error())
     }
-    return nil, err
+    return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
  }
   listings := make([]domain.Listing, len(pgListings))
   for i, l := range pgListings {
@@ -73,9 +74,9 @@ func (l *PgListingRepo) GetListingByID(ctx context.Context, id domain.ID) (domai
   err := l.db.GetContext(ctx, &pgListing, getByUserID, id)
   if err != nil {
     if err == sql.ErrNoRows {
-      return domain.Listing{}, err
+      return domain.Listing{}, errors.Wrap(errs.ErrNotExist, err.Error())
     }
-    return domain.Listing{}, err
+    return domain.Listing{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
  }
 
   return pgListing.ToDomain(), nil
@@ -90,10 +91,12 @@ func (l *PgListingRepo) Create(ctx context.Context, listing domain.Listing) (dom
     var pgErr *pgconn.PgError
     if errors.As(err, &pgErr) {
       if pgErr.Code == PgUniqueViolationCode {
-        return domain.Listing{}, nil
+        return domain.Listing{}, errors.Wrap(errs.ErrDuplicate, err.Error())
       } else {
-        return domain.Listing{}, nil
+        return domain.Listing{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
       }
+    } else {
+      return domain.Listing{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
     }
   }
 
@@ -106,7 +109,7 @@ func (l *PgListingRepo) Update(ctx context.Context, listing domain.Listing) (dom
 
   _, err := l.db.NamedExecContext(ctx, query, pgListing)
   if err != nil {
-    return domain.Listing{}, nil
+    return domain.Listing{}, errors.Wrap(errs.ErrNotExist, err.Error())
   }
 
   return l.GetListingByID(ctx, listing.ID)
@@ -115,7 +118,7 @@ func (l *PgListingRepo) Update(ctx context.Context, listing domain.Listing) (dom
 func (l *PgListingRepo) Delete(ctx context.Context, listingID int) error {
   _, err := l.db.ExecContext(ctx, deleteByID, listingID)
   if err != nil {
-    return err
+    return errors.Wrap(errs.ErrDeleteFailed, err.Error())
   }
 
   return nil
