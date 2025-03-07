@@ -19,7 +19,7 @@ type IPropertyRepo interface {
   GetAll(ctx context.Context) ([]domain.Property, error)
   GetPropertyByID(ctx context.Context, propertyID domain.ID) (domain.Property, error)
   GetUserProperties(ctx context.Context, userID domain.ID) ([]domain.Property, error)
-  Create(ctx context.Context, property domain.Property, details domain.PropertyDetails) (domain.Property, error)
+  Create(ctx context.Context, property domain.Property) (domain.Property, error)
   Update(ctx context.Context, property domain.Property) (domain.Property, error)
   Delete(ctx context.Context, propertyID domain.ID) error
 }
@@ -30,5 +30,5 @@ type IListingRepo interface {
   GetUserListings(ctx context.Context, userID int) ([]domain.Listing, error)
   Create(ctx context.Context, listing domain.Listing) (domain.Listing, error)
   Update(ctx context.Context, listing domain.Listing) (domain.Listing, error)
-  Delete(ctx context.Context, listingID int) error
+  Delete(ctx context.Context, listingID domain.ID) error
 }
