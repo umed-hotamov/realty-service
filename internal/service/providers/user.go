@@ -78,8 +78,6 @@ func (u *UserService) Update(ctx context.Context, param domain.UpdateUserParam, 
     return domain.User{}, nil
   }
 
-  // need to add field check
-
   user.Name = param.Name
   user.Surname = param.Surname
   user.Phone = param.Phone
