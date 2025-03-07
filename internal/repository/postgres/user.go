@@ -8,8 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"github.com/umed-hotamov/realty-service/internal/domain"
-	"github.com/umed-hotamov/realty-service/internal/repository/postgres/entity"
 	"github.com/umed-hotamov/realty-service/internal/errs"
+	"github.com/umed-hotamov/realty-service/internal/repository/postgres/entity"
 )
 
 type PostgresUserRepo struct {
@@ -120,5 +120,5 @@ func (u *PostgresUserRepo) Delete(ctx context.Context, userID domain.ID) error {
     return errors.Wrap(errs.ErrDeleteFailed, err.Error())
   }
 
-  return nil
+  return nil 
 }

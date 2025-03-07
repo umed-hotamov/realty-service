@@ -180,7 +180,7 @@ func (p *PgPropertyRepo) GetUserProperties(ctx context.Context, userID domain.ID
   return properties, nil
 }
 
-func (p *PgPropertyRepo) Create(ctx context.Context, property domain.Property, details domain.PropertyDetails) (domain.Property, error) {
+func (p *PgPropertyRepo) Create(ctx context.Context, property domain.Property) (domain.Property, error) {
   pgProperty := entity.NewPgProperty(property)
   query := entity.InsertQueryString(pgProperty, "property")
 
@@ -198,7 +198,7 @@ func (p *PgPropertyRepo) Create(ctx context.Context, property domain.Property, d
     }
   }
   
-  pgPropertyDetails := entity.NewPgPropertyDetails(details)
+  pgPropertyDetails := entity.NewPgPropertyDetails(property.PropertyDetails)
   query = entity.InsertQueryString(pgPropertyDetails, "property")
 
   _, err = p.db.NamedExecContext(ctx, query, pgPropertyDetails)
@@ -213,6 +213,19 @@ func (p *PgPropertyRepo) Create(ctx context.Context, property domain.Property, d
     } else {
       return domain.Property{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
     }
+  }
+
+  return p.GetPropertyByID(ctx, property.ID)
+}
+
+
+func (p *PgPropertyRepo) Update(ctx context.Context, property domain.Property) (domain.Property, error) {
+  pgProperty := entity.NewPgProperty(property)
+  query := entity.UpdateQueryString(pgProperty, "user")
+
+  _, err := p.db.NamedExecContext(ctx, query, pgProperty)
+  if err != nil {
+    return domain.Property{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
   }
 
   return p.GetPropertyByID(ctx, property.ID)
