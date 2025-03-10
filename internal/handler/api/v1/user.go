@@ -6,8 +6,10 @@ import (
 )
 
 func (h *Handler) InitUserRoutes(api *echo.Group) {
-  users := api.Group("/users")
-  users.GET("/", h.getAllUsers)
+  users := api.Group("/users") 
+  {
+    users.GET("/", h.getAllUsers)
+  }
 }
  
 func (h *Handler) getAllUsers(c echo.Context) error {

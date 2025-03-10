@@ -10,24 +10,30 @@ import (
 )
 
 type Handler struct {
-  config      *config.Config
-  logger      *zap.Logger
-  userService service.IUserService
+  config          *config.Config
+  logger          *zap.Logger
+  userService     service.IUserService
+  propertyService service.IPropertyService
+  listingService  service.IListingService
 }
 
 type HandlerParams struct {
   fx.In
   
-  Config      *config.Config
-  Logger      *zap.Logger
-  UserService service.IUserService
+  Config          *config.Config
+  Logger          *zap.Logger
+  UserService     service.IUserService
+  PropertyService service.IPropertyService
+  ListingService  service.IListingService
 }
 
 func NewHandler(params HandlerParams, e *echo.Echo) *Handler {
   handler := &Handler{
-    config:      params.Config,
-    logger:      params.Logger,
-    userService: params.UserService,
+    config:          params.Config,
+    logger:          params.Logger,
+    userService:     params.UserService,
+    propertyService: params.PropertyService,
+    listingService:  params.ListingService,
   }
 
   api := e.Group("/api/v1")
