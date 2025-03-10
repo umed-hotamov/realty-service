@@ -1,3 +1,13 @@
 server:
   host: localhost
   port: 4000
+postgres:
+  host: localhost
+  port: 5432
+  dbname: realty
+  user: test
+  password: test
+logger:
+  path: logs
+  filename: logs.json
+  level: info

@@ -1,4 +1,4 @@
-module github.com/umed-hotamov/house-rental
+module github.com/umed-hotamov/realty-service
 
 go 1.23.0
 
