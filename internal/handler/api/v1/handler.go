@@ -1,8 +1,10 @@
 package v1
 
 import (
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/umed-hotamov/realty-service/internal/app/config"
+	"github.com/umed-hotamov/realty-service/internal/domain"
 	"github.com/umed-hotamov/realty-service/internal/service"
 
 	"go.uber.org/fx"
@@ -40,4 +42,17 @@ func NewHandler(params HandlerParams, e *echo.Echo) *Handler {
   handler.InitUserRoutes(api)
   
   return handler
+}
+
+func getIDFromPath(c echo.Context, param string) (domain.ID, error) {
+	idString := c.Param(param)
+	if idString == "" {
+		return "", ErrorEmptyParam 
+	}
+
+	if _, err := uuid.Parse(idString); err != nil {
+		return "", ErrorInvalidUUID
+	}
+
+	return domain.ID(idString), nil
 }
