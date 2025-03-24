@@ -25,7 +25,7 @@ type IPropertyService interface {
 
 type IListingService interface {
   GetAll(ctx context.Context) ([]domain.Listing, error)
-  GetUserListings(ctx context.Context, userID int) ([]domain.Listing, error)
+  GetUserListings(ctx context.Context, userID domain.ID) ([]domain.Listing, error)
   Create(ctx context.Context, param domain.CreateListingParam) (domain.Listing, error)
   Update(ctx context.Context, param domain.UpdateListingParam, listingID domain.ID) (domain.Listing, error)
   Delete(ctx context.Context, listingID domain.ID) error
