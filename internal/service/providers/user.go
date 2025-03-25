@@ -40,6 +40,16 @@ func (u *UserService) GetByID(ctx context.Context, id domain.ID) (domain.User, e
   return user, nil
 }
 
+func (u *UserService) GetByEmail(ctx context.Context, email string) (domain.User, error) {
+  user, err := u.repo.GetByEmail(ctx, email)
+  if err != nil {
+    u.logger.Error("failed to get user by email", zap.Error(err))
+    return domain.User{}, err
+  }
+
+  return user, nil
+}
+
 func (u *UserService) GetByRole(ctx context.Context, role domain.UserRole) ([]domain.User, error) {
   users, err := u.repo.GetByRole(ctx, role)
   if err != nil {
