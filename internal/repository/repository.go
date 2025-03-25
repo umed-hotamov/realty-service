@@ -10,6 +10,7 @@ type IUserRepo interface {
   GetAll(ctx context.Context) ([]domain.User, error)
   GetByID(ctx context.Context, id domain.ID) (domain.User, error)
   GetByRole(ctx context.Context, role domain.UserRole) ([]domain.User, error)
+  GetByEmail(ctx context.Context, email string) (domain.User, error)
   Create(ctx context.Context, user domain.User) (domain.User, error)
   Update(ctx context.Context, user domain.User) (domain.User, error)
   Delete(ctx context.Context, userID domain.ID) error

@@ -23,10 +23,11 @@ func NewUserRepo(db *sqlx.DB) *PostgresUserRepo {
 }
 
 const (
-  UserSelectAll    = "SELECT * FROM public.user"
-  UserSelectByID   = "SELECT * FROM public.user WHERE id = $1"
-  UserSelectByRole = "SELECT * FROM public.user WHERE role = $1"
-  UserDelete       = "DELETE FROM public.user WHERE id = $1"
+  UserSelectAll     = "SELECT * FROM public.user"
+  UserSelectByID    = "SELECT * FROM public.user WHERE id = $1"
+  UserSelectByRole  = "SELECT * FROM public.user WHERE role = $1"
+  UserSelectByEmail = "SELECT * FROM public.user WHERE email = $1"
+  UserDelete        = "DELETE FROM public.user WHERE id = $1"
 )
 
 func (u *PostgresUserRepo) GetAll(ctx context.Context) ([]domain.User, error) {
@@ -79,6 +80,20 @@ func (u *PostgresUserRepo) GetByRole(ctx context.Context, role domain.UserRole) 
   }
 
   return users, nil 
+}
+
+func (u *PostgresUserRepo) GetByEmail(ctx context.Context, email string) (domain.User, error) {
+  var pgUser entity.PostgresUser
+
+  err := u.db.GetContext(ctx, &pgUser, UserSelectByEmail, email)
+  if err != nil {
+    if err == sql.ErrNoRows {
+      return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
+    }
+    return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+  }
+
+  return pgUser.ToDomain(), nil 
 }
 
 func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain.User, error) {
