@@ -14,7 +14,6 @@ const (
 )
 
 type ListingDTO struct {
-  ID          string `json:"id"`
   UserID      string `json:"user_id"`
   PropertyID  string `json:"property_id"`
   Title       string `json:"title"`
@@ -23,6 +22,25 @@ type ListingDTO struct {
   Price       int    `json:"price"`
   Description string `json:"description"`
   Status      string `json:"status"`
+}
+
+type CreateListingDTO struct {
+  PropertyID  string                   `json:"property_id"`
+  Title       string                   `json:"title"`
+  City        string                   `json:"city"`
+  Offer       domain.OfferType         `json:"offer"`
+  Price       int                      `json:"price"`
+  Description string                   `json:"description"`
+  Status      domain.ListingStatusType `json:"status"`
+}
+
+type UpdateListingDTO struct {
+  ID          string           `json:"id"`
+  Title       string           `json:"title"`
+  City        string           `json:"city"`
+  Offer       domain.OfferType `json:"offer"`
+  Price       int              `json:"price"`
+  Description string           `json:"description"`
 }
 
 func NewListingDTO(listing domain.Listing) ListingDTO {
@@ -50,7 +68,6 @@ func NewListingDTO(listing domain.Listing) ListingDTO {
   }
 
   return ListingDTO {
-    ID:          listing.ID.String(),        
     UserID:      listing.UserID.String(),     
     PropertyID:  listing.PropertyID.String(),
     Title:       listing.Title,

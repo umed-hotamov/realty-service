@@ -42,6 +42,15 @@ func (l *ListingService) GetUserListings(ctx context.Context, userID int) ([]dom
 
 func (l *ListingService) Create(ctx context.Context, param domain.CreateListingParam) (domain.Listing, error) {
   listingDTO := domain.Listing{
+    ID:          domain.NewID(),
+    UserID:      param.UserID,
+    PropertyID:  param.PropertyID,
+    Title:       param.Title,
+    City:        param.City,
+    Offer:       param.Offer,
+    Price:       param.Price,
+    Description: param.Description,
+    Status:      param.Status,
   }
   
   listing, err := l.repo.Create(ctx, listingDTO)
@@ -53,12 +62,18 @@ func (l *ListingService) Create(ctx context.Context, param domain.CreateListingP
   return listing, nil
 }
 
-func (l *ListingService) Update(ctx context.Context, listing domain.Listing, listingID domain.ID) (domain.Listing, error) {
+func (l *ListingService) Update(ctx context.Context, param domain.UpdateListingParam, listingID domain.ID) (domain.Listing, error) {
   listing, err := l.repo.GetListingByID(ctx, listingID)
   if err != nil {
     l.logger.Error("failed to get listing by id", zap.Error(err))
     return domain.Listing{}, nil
   }
+
+  listing.Title       = param.Title      
+  listing.City        = param.City      
+  listing.Offer       = param.Offer
+  listing.Price       = param.Price     
+  listing.Description = param.Description
 
   listing, err = l.repo.Update(ctx, listing)
   if err != nil {
