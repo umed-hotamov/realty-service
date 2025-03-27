@@ -7,11 +7,11 @@ import (
 )
 
 func (h *Handler) InitListingRoutes(api *echo.Group) {
-  listings := api.Group("/listings", h.verifyToken)
+  listing := api.Group("/listings", h.verifyToken)
   {
-    listings.GET("/", h.getAllListings)
-    listings.GET("/:user_id", h.getUserListings)
-    listings.POST("/create", h.createListing)
+    listing.GET("/", h.getAllListings)
+    listing.GET("/:user_id", h.getUserListings)
+    listing.POST("/create", h.createListing)
   }
 }
 
@@ -26,7 +26,7 @@ func (h *Handler) getAllListings(c echo.Context) error {
     listingsDTO[i] = dto.NewListingDTO(listing)
   }
 
-  return h.successResponse(c, listings)
+  return h.successResponse(c, listingsDTO)
 }
   
 func (h *Handler) getUserListings(c echo.Context) error {
@@ -45,7 +45,7 @@ func (h *Handler) getUserListings(c echo.Context) error {
     listingsDTO[i] = dto.NewListingDTO(listing)
   }
 
-  return h.successResponse(c, listings)
+ return h.successResponse(c, listingsDTO)
 }
 
 func (h *Handler) createListing(c echo.Context) error {
@@ -60,7 +60,7 @@ func (h *Handler) createListing(c echo.Context) error {
     return h.errorResponse(c, err)
   }
 
-  listing, err := h.listingService.Create(c.Request().Context(), domain.CreateListingParam{
+  _, err = h.listingService.Create(c.Request().Context(), domain.CreateListingParam{
     UserID:      userID,
     PropertyID:  domain.ID(createListingDTO.PropertyID),
     Title:       createListingDTO.Title,
@@ -75,7 +75,7 @@ func (h *Handler) createListing(c echo.Context) error {
     return h.errorResponse(c, err)
   }
 
-  return h.successResponse(c, listing)
+  return h.successResponse(c, "created")
 }
 
 func (h *Handler) updateListing(c echo.Context) error {
@@ -86,7 +86,7 @@ func (h *Handler) updateListing(c echo.Context) error {
     return h.errorResponse(c, err)
   }
 
-  newListing, err := h.listingService.Update(c.Request().Context(), domain.UpdateListingParam{
+  _, err = h.listingService.Update(c.Request().Context(), domain.UpdateListingParam{
     Title:       updateListingDTO.Title,
     City:        updateListingDTO.City,
     Offer:       updateListingDTO.Offer,
@@ -98,5 +98,5 @@ func (h *Handler) updateListing(c echo.Context) error {
     return h.errorResponse(c, err)
   }
   
-  return h.successResponse(c, newListing)
+  return h.successResponse(c, "updated")
 }
