@@ -11,3 +11,7 @@ logger:
   path: logs
   filename: logs.json
   level: info
+jwt:
+  secret: secret
+  accessTokenTime: 60 
+  refreshTokenTime: 86400
