@@ -20,6 +20,7 @@ const (
 type Property struct {
   ID              ID
   OwnerID         ID
+  BuildingID      ID
   PropertyType    PropertyType
   HouseType       HouseType
   PropertyDetails PropertyDetails
@@ -36,7 +37,6 @@ type PropertyDetails struct {
 }
 
 type BuildingDetails struct {
-  BuildingID       ID
   BuildingType     BuildingType
   Address          string
   Developer        string
