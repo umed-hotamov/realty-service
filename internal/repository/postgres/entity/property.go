@@ -94,7 +94,6 @@ func (p *PgProperty) ToDomain(pDetails PgPropertyDetails, bDetails PgBuildingDet
   var buildingDetails domain.BuildingDetails
   if bDetails != (PgBuildingDetails{}) {
     buildingDetails = domain.BuildingDetails{
-      BuildingID:       domain.ID(bDetails.BuildingID.String()),   
       BuildingType:     buildingType,
       Address:          bDetails.Address,
       Developer:        bDetails.Developer,
@@ -107,6 +106,7 @@ func (p *PgProperty) ToDomain(pDetails PgPropertyDetails, bDetails PgBuildingDet
   return domain.Property{
     ID:              domain.ID(p.ID.String()),            
     OwnerID:         domain.ID(p.OwnerID.String()),
+    BuildingID:       domain.ID(bDetails.BuildingID.String()),   
     PropertyType:    propertyType,
     HouseType:       houseType,     
     PropertyDetails: propertyDetails,
@@ -117,7 +117,7 @@ func (p *PgProperty) ToDomain(pDetails PgPropertyDetails, bDetails PgBuildingDet
 func NewPgProperty(property domain.Property) PgProperty {
   propertyID, _ := uuid.Parse(property.ID.String())
   ownerID, _ := uuid.Parse(property.OwnerID.String())
-  buildingID, _ := uuid.Parse(property.BuildingDetails.BuildingID.String())
+  buildingID, _ := uuid.Parse(property.BuildingID.String())
 
   var (
     propertyType string

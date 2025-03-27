@@ -10,6 +10,7 @@ type Config struct {
   Server   ServerConfig
   Postgres PosrtgresConfig
   Logger   LoggerConfig
+  Jwt      JwtConfig
 }
 
 type ServerConfig struct {
@@ -29,6 +30,12 @@ type LoggerConfig struct {
   Path     string
   FileName string
   Level    string
+}
+
+type JwtConfig struct {
+	Secret           string
+	AccessTokenTime  int64
+	RefreshTokenTime int64
 }
 
 func GetConfig() *Config {

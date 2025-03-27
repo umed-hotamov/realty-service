@@ -3,9 +3,9 @@ package app
 import (
 	"net/http"
 
-	v1 "github.com/umed-hotamov/realty-service/internal/handler/api/v1"
 	"github.com/umed-hotamov/realty-service/internal/app/config"
 	"github.com/umed-hotamov/realty-service/internal/app/server"
+	v1 "github.com/umed-hotamov/realty-service/internal/handler/api/v1"
 	"github.com/umed-hotamov/realty-service/internal/repository"
 	pg "github.com/umed-hotamov/realty-service/internal/repository/postgres"
 	"github.com/umed-hotamov/realty-service/internal/service"
