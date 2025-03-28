@@ -15,43 +15,45 @@ import (
 )
 
 type Handler struct {
-  config          *config.Config
-  logger          *zap.Logger
-  userService     service.IUserService
-  propertyService service.IPropertyService
-  listingService  service.IListingService
-  authService     service.IAuthService
+	config          *config.Config
+	logger          *zap.Logger
+	userService     service.IUserService
+	propertyService service.IPropertyService
+	listingService  service.IListingService
+	authService     service.IAuthService
 }
 
 type HandlerParams struct {
-  fx.In
-  
-  Config          *config.Config
-  Logger          *zap.Logger
-  UserService     service.IUserService
-  PropertyService service.IPropertyService
-  ListingService  service.IListingService
+	fx.In
+
+	Config          *config.Config
+	Logger          *zap.Logger
+	UserService     service.IUserService
+	PropertyService service.IPropertyService
+	ListingService  service.IListingService
 }
 
 func NewHandler(params HandlerParams, e *echo.Echo) *Handler {
-  handler := &Handler{
-    config:          params.Config,
-    logger:          params.Logger,
-    userService:     params.UserService,
-    propertyService: params.PropertyService,
-    listingService:  params.ListingService,
-  }
+	handler := &Handler{
+		config:          params.Config,
+		logger:          params.Logger,
+		userService:     params.UserService,
+		propertyService: params.PropertyService,
+		listingService:  params.ListingService,
+	}
 
-  api := e.Group("/api/v1")
-  handler.InitUserRoutes(api)
-  
-  return handler
+	api := e.Group("/api/v1")
+	handler.InitUserRoutes(api)
+  handler.InitPropertyRoutes(api)
+  handler.InitListingRoutes(api)
+
+	return handler
 }
 
 func getIDFromPath(c echo.Context, param string) (domain.ID, error) {
 	idString := c.Param(param)
 	if idString == "" {
-		return "", ErrorEmptyParam 
+		return "", ErrorEmptyParam
 	}
 
 	if _, err := uuid.Parse(idString); err != nil {
@@ -92,7 +94,7 @@ func (h *Handler) verifyToken(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		tokenString, err := extractAuthToken(c)
 		if err != nil {
-			return h.errorResponse(c, ErrorUnauthorized) 
+			return h.errorResponse(c, ErrorUnauthorized)
 		}
 
 		payload, err := h.authService.Payload(c.Request().Context(), domain.Token(tokenString))

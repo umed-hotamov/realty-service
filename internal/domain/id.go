@@ -1,15 +1,15 @@
 package domain
 
 import (
-  "github.com/google/uuid"
+	"github.com/google/uuid"
 )
 
 type ID string
 
 func (id ID) String() string {
-  return string(id)
+	return string(id)
 }
 
 func NewID() ID {
-  return ID(uuid.New().String())
+	return ID(uuid.New().String())
 }

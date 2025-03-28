@@ -9,40 +9,40 @@ import (
 )
 
 func (h *Handler) InitUserRoutes(api *echo.Group) {
-  user := api.Group("/user") 
-  {
-    userAuth := user.Group("/auth")
-    {
-      userAuth.POST("/sign-up", h.userSignUp)
-      userAuth.POST("/sign-in", h.userSignIn)
-      userAuth.POST("/logout",  h.userLogout)
-      userAuth.POST("/refresh", h.userRefresh)
-    }
-  }
+	user := api.Group("/user")
+	{
+		userAuth := user.Group("/auth")
+		{
+			userAuth.POST("/sign-up", h.userSignUp)
+			userAuth.POST("/sign-in", h.userSignIn)
+			userAuth.POST("/logout", h.userLogout)
+			userAuth.POST("/refresh", h.userRefresh)
+		}
+	}
 }
- 
+
 func (h *Handler) userSignUp(c echo.Context) error {
-  var signUpDTO dto.SignUpDTO
-  
-  err := c.Bind(signUpDTO)
-  if err != nil {
-    return h.errorResponse(c, err)
-  }
+	var signUpDTO dto.SignUpDTO
 
-  err = h.authService.SignUp(c.Request().Context(), domain.SignUpParam{
-    Role:     signUpDTO.Role,
-    Name:     signUpDTO.Name,    
-    Surname:  signUpDTO.Surname,
-    Email:    signUpDTO.Email,   
-    Password: signUpDTO.Password,
-    Phone:    signUpDTO.Phone, 
-  })
+	err := c.Bind(signUpDTO)
+	if err != nil {
+		return h.errorResponse(c, err)
+	}
 
-  if err != nil {
-    return h.errorResponse(c, err)
-  }
+	err = h.authService.SignUp(c.Request().Context(), domain.SignUpParam{
+		Role:     signUpDTO.Role,
+		Name:     signUpDTO.Name,
+		Surname:  signUpDTO.Surname,
+		Email:    signUpDTO.Email,
+		Password: signUpDTO.Password,
+		Phone:    signUpDTO.Phone,
+	})
 
-  return h.successResponse(c, "created")
+	if err != nil {
+		return h.errorResponse(c, err)
+	}
+
+	return h.successResponse(c, "created")
 }
 
 func (h *Handler) userSignIn(c echo.Context) error {
@@ -60,16 +60,16 @@ func (h *Handler) userSignIn(c echo.Context) error {
 		return h.errorResponse(c, err)
 	}
 
-  c.SetCookie(&http.Cookie{
-    Name:     "refreshToken",
-    Value:    authDetails.AccessToken.String(),
-    Path:     "/",
-    Domain:   h.config.Server.Host,
-    MaxAge:   86400,
-    HttpOnly: false,
-    Secure:   false,
-    SameSite: http.SameSiteLaxMode,
-  })
+	c.SetCookie(&http.Cookie{
+		Name:     "refreshToken",
+		Value:    authDetails.AccessToken.String(),
+		Path:     "/",
+		Domain:   h.config.Server.Host,
+		MaxAge:   86400,
+		HttpOnly: false,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	})
 
 	return h.successResponse(c, authDetails.AccessToken.String())
 }
@@ -85,15 +85,15 @@ func (h *Handler) userLogout(c echo.Context) error {
 		h.errorResponse(c, err)
 	}
 
-  c.SetCookie(&http.Cookie{
-    Name:     "refreshToken",
-    Value:    "",
-    Path:     "/",
-    Domain:   h.config.Server.Host,
-    MaxAge:   -1,
-    HttpOnly: false,
-    Secure:   false,
-  })
+	c.SetCookie(&http.Cookie{
+		Name:     "refreshToken",
+		Value:    "",
+		Path:     "/",
+		Domain:   h.config.Server.Host,
+		MaxAge:   -1,
+		HttpOnly: false,
+		Secure:   false,
+	})
 
 	return h.successResponse(c, "successfully logged out")
 }
@@ -107,7 +107,7 @@ func (h *Handler) userRefresh(c echo.Context) error {
 
 	refreshCookie, err := c.Cookie("refreshToken")
 	if err != nil {
-    return h.errorResponse(c, ErrorUnauthorized)
+		return h.errorResponse(c, ErrorUnauthorized)
 	}
 
 	authDetails, err := h.authService.Refresh(c.Request().Context(), domain.Token(refreshCookie.Value), refreshDTO.Fingerprint)
@@ -115,16 +115,16 @@ func (h *Handler) userRefresh(c echo.Context) error {
 		return h.errorResponse(c, err)
 	}
 
-  c.SetCookie(&http.Cookie{
-    Name:     "refreshToken",
-    Value:    authDetails.AccessToken.String(),
-    Path:     "/",
-    Domain:   h.config.Server.Host,
-    MaxAge:   86400,
-    HttpOnly: false,
-    Secure:   false,
-    SameSite: http.SameSiteLaxMode,
-  })
+	c.SetCookie(&http.Cookie{
+		Name:     "refreshToken",
+		Value:    authDetails.AccessToken.String(),
+		Path:     "/",
+		Domain:   h.config.Server.Host,
+		MaxAge:   86400,
+		HttpOnly: false,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	})
 
 	return h.successResponse(c, authDetails.AccessToken.String())
 }

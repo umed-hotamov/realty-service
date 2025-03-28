@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 )
+
 const (
 	BadRequest          = "bad request"
 	NotFound            = "not found"
@@ -19,14 +20,14 @@ var (
 	ErrorBadRequest   = errors.New("bad request")
 	ErrorUnauthorized = errors.New("unauthorized")
 	ErrorForbidden    = errors.New("forbidden")
-  ErrorEmptyParam   = errors.New("empty query parameter")
-  ErrorInvalidUUID  = errors.New("invalid uuid")
+	ErrorEmptyParam   = errors.New("empty query parameter")
+	ErrorInvalidUUID  = errors.New("invalid uuid")
 )
 
 func (h *Handler) errorResponse(c echo.Context, err error) error {
-  return c.JSON(http.StatusInternalServerError, err)
+	return c.JSON(http.StatusInternalServerError, err)
 }
 
 func (h *Handler) successResponse(c echo.Context, data interface{}) error {
-  return c.JSON(http.StatusOK, data)
+	return c.JSON(http.StatusOK, data)
 }
