@@ -7,65 +7,72 @@ import (
 )
 
 type Config struct {
-  Server   ServerConfig
-  Postgres PosrtgresConfig
-  Logger   LoggerConfig
+	Server   ServerConfig
+	Postgres PosrtgresConfig
+	Logger   LoggerConfig
+	Jwt      JwtConfig
 }
 
 type ServerConfig struct {
-  Host string
-  Port string
+	Host string
+	Port string
 }
 
 type PosrtgresConfig struct {
-  Host     string
-  Port     string
-  DBName   string
-  User     string
-  Password string
+	Host     string
+	Port     string
+	DBName   string
+	User     string
+	Password string
 }
 
 type LoggerConfig struct {
-  Path     string
-  FileName string
-  Level    string
+	Path     string
+	FileName string
+	Level    string
+}
+
+type JwtConfig struct {
+	Secret           string
+	AccessTokenTime  int64
+	RefreshTokenTime int64
 }
 
 func GetConfig() *Config {
-  viper.SetConfigName("config")
+	viper.SetConfigName("config")
 	viper.AddConfigPath("config")
 	viper.SetConfigType("yml")
 
-  viper.AutomaticEnv()
+	viper.AutomaticEnv()
 
-  if err := bindEnvConfig(); err != nil {
-    log.Fatalf("error reading config: %v", err)
-  }
+	if err := bindEnvConfig(); err != nil {
+		log.Fatalf("error reading config: %v", err)
+	}
 
-  log.Println("reading config file: config/config.yaml")
+	log.Println("reading config file: config/config.yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("error reading config file: %v", err)
 	}
 
-  cfg := new(Config)
-  if err := viper.Unmarshal(cfg); err != nil {
-    log.Fatalf("error unmarshaling config: %v", err)
-  }
+	cfg := new(Config)
+	if err := viper.Unmarshal(cfg); err != nil {
+		log.Fatalf("error unmarshaling config: %v", err)
+	}
 
-  return cfg
+	return cfg
 }
 
 func bindEnvConfig() error {
-  bindings := make(map[string]string)
+	bindings := make(map[string]string)
 
-  bindings["server.host"] = "HOST"
-  bindings["server.port"] = "PORT"
+	bindings["server.host"] = "HOST"
+	bindings["server.port"] = "PORT"
 
-  for name, binding := range bindings {
-    if err := viper.BindEnv(name, binding); err != nil {
-      return err
-    }
-  }
+	for name, binding := range bindings {
+		if err := viper.BindEnv(name, binding); err != nil {
+			return err
+		}
+	}
 
-  return nil 
+	return nil
 }

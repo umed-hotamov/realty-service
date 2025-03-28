@@ -1,168 +1,110 @@
 package dto
 
-// import (
-// 	"github.com/google/uuid"
-// 	"github.com/guregu/null"
-// 	"github.com/umed-hotamov/realty-service/internal/domain"
-// )
+import (
+	"github.com/umed-hotamov/realty-service/internal/domain"
+)
 
-// const (
-//   TypeApartment    = "apartment"
-//   TypeHouse        = "house"
-//   
-//   TypeCottage      = "cottage"
-//   TypeCountryHouse = "country_house"
-//   TypeTownHouse    = "townhome"
-//   TypeTinyHome     = "tiny_home"
-//   
-//   TypeNew          = "new"
-//   TypeSecondary    = "secondary"
-// )
+const (
+	Apartment = "apartment"
+	House     = "house"
 
-// type PgProperty struct {
-//   ID              uuid.UUID     `db:"id"`
-//   OwnerID         uuid.UUID     `db:"owner_id"`
-//   BuildingID      uuid.NullUUID `db:"building_id"`
-//   PropertyType    string        `db:"property_type"`
-//   HouseType       null.String   `db:"house_type"`
-// }
+	Cottage      = "cottage"
+	CountryHouse = "country_house"
+	TownHouse    = "townhome"
+	TinyHome     = "tiny_home"
 
-// type PgPropertyDetails struct {
-//   PropertyID      uuid.UUID `db:"property_id"`
-//   Address         string    `db:"address"`
-//   ApartmentNumber int       `db:"apartment_number"`
-//   Floors          int       `db:"floors"`
-//   Rooms           int       `db:"rooms"`
-//   Area            int       `db:"area"`
-// }
+	New       = "new"
+	Secondary = "secondary"
+)
 
-// type PgApartmentBuilding struct {
-//   ID   uuid.UUID `db:"id"`
-//   Type string    `db:"type"` 
-// }
+type PropertyDTO struct {
+	ID              string             `json:"id"`
+	OwnerID         string             `json:"owner_id"`
+	PropertyType    string             `json:"property_type"`
+	HouseType       string             `json:"house_type"`
+	PropertyDetails PropertyDetailsDTO `json:"property_details"`
+	BuildingDetails BuildingDetailsDTO `json:"building_details"`
+}
 
-// type PgBuildingDetails struct {
-//   BuildingID       uuid.UUID `db:"building_id"`
-//   Address          string    `db:"address"`
-//   Developer        string    `db:"developer"`
-//   Floors           int       `db:"floors"`
-//   ConstructionYear int       `db:"construction_year"`
-//   ParkingPlace     bool      `db:"parking_place"`
-// }
+type PropertyDetailsDTO struct {
+	PropertyID      string `json:"property_id"`
+	Address         string `json:"address"`
+	ApartmentNumber int    `json:"apartment_number"`
+	Floors          int    `json:"floors"`
+	Rooms           int    `json:"rooms"`
+	Area            int    `json:"area"`
+}
 
-// func (p *PgProperty) ToDomain(pDetails PgPropertyDetails, bDetails PgBuildingDetails, apartmentBuilding PgApartmentBuilding) domain.Property {
-//   var (
-//     propertyType domain.PropertyType
-//     houseType    domain.HouseType
-//     buildingType domain.BuildingType
-//   )
+type BuildingDetailsDTO struct {
+	BuildingID       string `json:"building_id"`
+	Address          string `json:"address"`
+	Developer        string `json:"developer"`
+	Floors           int    `json:"floors"`
+	ConstructionYear int    `json:"construction_year"`
+	ParkingPlace     bool   `json:"parking_place"`
+}
 
-//   switch p.PropertyType {
-//   case TypeApartment:
-//     propertyType = domain.Apartment
-//   case TypeHouse:
-//     propertyType = domain.House
-//   }
-//   
-//   switch p.HouseType.String {
-//   case TypeCottage:
-//     houseType = domain.Cottage
-//   case TypeCountryHouse:
-//     houseType = domain.CountryHouse
-//   case TypeTownHouse:
-//     houseType = domain.TownHouse
-//   case TypeTinyHome:
-//     houseType = domain.TinyHome
-//   }
+type CreatePropertyDTO struct {
+	OwnerID         string              `json:"owner_id"`
+	BuildingID      *string             `json:"building_id"`
+	PropertyType    domain.PropertyType `json:"property_type"`
+	HouseType       *domain.HouseType   `json:"house_type,omitempty"`
+	PropertyDetails PropertyDetailsDTO  `json:"property_details"`
+}
 
-//   switch apartmentBuilding.Type {
-//   case TypeNew:
-//     buildingType = domain.New
-//   case TypeSecondary:
-//     buildingType = domain.Secondary
-//   }
-//   
-//   propertyDetails := domain.PropertyDetails{
-//     PropertyID:      domain.ID(pDetails.PropertyID.String()),      
-//     Address:         pDetails.Address,
-//     ApartmentNumber: pDetails.ApartmentNumber,
-//     Floors:          pDetails.Floors,          
-//     Rooms:           pDetails.Rooms,           
-//     Area:            pDetails.Area,
-//   }
-//   
-//   var buildingDetails domain.BuildingDetails
-//   if bDetails != (PgBuildingDetails{}) {
-//     buildingDetails = domain.BuildingDetails{
-//       BuildingID:       domain.ID(bDetails.BuildingID.String()),   
-//       BuildingType:     buildingType,
-//       Address:          bDetails.Address,
-//       Developer:        bDetails.Developer,
-//       Floors:           bDetails.Floors,
-//       ConstructionYear: bDetails.ConstructionYear,
-//       ParkingPlace:     bDetails.ParkingPlace,
-//     }
-//   }
+type UpdatePropertyDTO struct {
+	ID              string `json:"id"`
+	Address         string `json:"address"`
+	ApartmentNumber int    `json:"apartment_number"`
+	Floors          int    `json:"floors"`
+	Rooms           int    `json:"rooms"`
+	Area            int    `json:"area"`
+}
 
-//   return domain.Property{
-//     ID:              domain.ID(p.ID.String()),            
-//     OwnerID:         domain.ID(p.OwnerID.String()),
-//     PropertyType:    propertyType,
-//     HouseType:       houseType,     
-//     PropertyDetails: propertyDetails,
-//     BuildingDetails: buildingDetails,
-//   }
-// }
+func NewPropertyDTO(property domain.Property) PropertyDTO {
+	var (
+		propertyType string
+		houseType    string
+	)
 
-// func NewPgProperty(property domain.Property) PgProperty {
-//   propertyID, _ := uuid.Parse(property.ID.String())
-//   ownerID, _ := uuid.Parse(property.OwnerID.String())
-//   buildingID, _ := uuid.Parse(property.BuildingDetails.BuildingID.String())
+	switch property.PropertyType {
+	case domain.Apartment:
+		propertyType = Apartment
+	case domain.House:
+		propertyType = House
+	}
 
-//   var (
-//     propertyType string
-//     houseType    string
-//   )
+	switch property.HouseType {
+	case domain.Cottage:
+		houseType = Cottage
+	case domain.CountryHouse:
+		houseType = CountryHouse
+	case domain.TownHouse:
+		houseType = TownHouse
+	case domain.TinyHome:
+		houseType = TinyHome
+	}
 
-//   switch property.PropertyType {
-//   case domain.Apartment:
-//     propertyType = TypeApartment
-//   case domain.House:
-//     propertyType = TypeHouse
-//   }
-//   
-//   switch property.HouseType {  
-//   case domain.Cottage: 
-//     houseType = TypeCottage     
-//   case domain.CountryHouse:
-//     houseType = TypeCountryHouse
-//   case domain.TownHouse:
-//     houseType = TypeTownHouse   
-//   case domain.TinyHome: 
-//     houseType = TypeTinyHome
-//   }
-//   
-//   return PgProperty{
-//     ID:           propertyID, 
-//     OwnerID:      ownerID,
-//     BuildingID:   uuid.NullUUID{
-//       UUID:  buildingID,
-//       Valid: true,
-//     },
-//     PropertyType: propertyType,
-//     HouseType:    null.StringFrom(houseType),
-//   }
-// }
-
-// func NewPgPropertyDetails(details domain.PropertyDetails) PgPropertyDetails {
-//   propertyID, _ := uuid.Parse(details.PropertyID.String())
-//   
-//   return PgPropertyDetails{
-//     PropertyID:      propertyID,     
-//     Address:         details.Address,
-//     ApartmentNumber: details.ApartmentNumber,
-//     Floors:          details.Floors,
-//     Rooms:           details.Rooms,
-//     Area:            details.Area,
-//   }
-// }
+	return PropertyDTO{
+		ID:           property.ID.String(),
+		OwnerID:      property.OwnerID.String(),
+		PropertyType: propertyType,
+		HouseType:    houseType,
+		PropertyDetails: PropertyDetailsDTO{
+			PropertyID:      property.ID.String(),
+			Address:         property.PropertyDetails.Address,
+			ApartmentNumber: property.PropertyDetails.ApartmentNumber,
+			Floors:          property.PropertyDetails.Floors,
+			Rooms:           property.PropertyDetails.Rooms,
+			Area:            property.PropertyDetails.Area,
+		},
+		BuildingDetails: BuildingDetailsDTO{
+			BuildingID:       property.BuildingID.String(),
+			Address:          property.BuildingDetails.Address,
+			Developer:        property.BuildingDetails.Developer,
+			Floors:           property.BuildingDetails.Floors,
+			ConstructionYear: property.BuildingDetails.ConstructionYear,
+			ParkingPlace:     property.BuildingDetails.ParkingPlace,
+		},
+	}
+}
