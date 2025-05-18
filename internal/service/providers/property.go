@@ -16,8 +16,8 @@ type PropertyService struct {
 
 func NewPropertyService(repo repository.IPropertyRepo, logger *zap.Logger) *PropertyService {
 	return &PropertyService{
-		repo: repo,
-    logger: logger,
+		repo:   repo,
+		logger: logger,
 	}
 }
 

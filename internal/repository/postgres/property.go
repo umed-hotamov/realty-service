@@ -30,7 +30,7 @@ const (
 	SelectUserProperties  = "SELECT * FROM public.property WHERE owner_id = $1"
 	SelectPropertyByID    = "SELECT * FROM public.property WHERE id = $1"
 	PropertyDelete        = "DELETE FROM public.property WHERE id = $1"
-  SelectBuildingDetails = "SELECT * FROM public.building_details WHERE building_id = $1"
+	SelectBuildingDetails = "SELECT * FROM public.building_details WHERE building_id = $1"
 )
 
 func (p *PgPropertyRepo) GetAll(ctx context.Context) ([]domain.Property, error) {

@@ -44,8 +44,8 @@ func NewHandler(params HandlerParams, e *echo.Echo) *Handler {
 
 	api := e.Group("/api/v1")
 	handler.InitUserRoutes(api)
-  handler.InitPropertyRoutes(api)
-  handler.InitListingRoutes(api)
+	handler.InitPropertyRoutes(api)
+	handler.InitListingRoutes(api)
 
 	return handler
 }

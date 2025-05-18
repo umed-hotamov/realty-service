@@ -10,8 +10,8 @@ func (h *Handler) InitPropertyRoutes(api *echo.Group) {
 	property := api.Group("/property", h.verifyToken)
 	{
 		property.GET("/:user_id", h.getUserProperties)
-	  property.POST("", h.createProperty)
-  }
+		property.POST("", h.createProperty)
+	}
 }
 
 func (h *Handler) getUserProperties(c echo.Context) error {
@@ -19,7 +19,7 @@ func (h *Handler) getUserProperties(c echo.Context) error {
 	if err != nil {
 		return h.errorResponse(c, err)
 	}
-  
+
 	properties, err := h.propertyService.GetUserProperties(c.Request().Context(), userID)
 	if err != nil {
 		return h.errorResponse(c, err)

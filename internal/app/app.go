@@ -32,10 +32,10 @@ func Run() {
 			v1.NewHandler,
 
 			database.NewPostgresDB,
-      redis.NewClient,
-      
-      storage.NewSessionStorage,
-      manager.NewAuthManager,
+			redis.NewClient,
+
+			storage.NewSessionStorage,
+			manager.NewAuthManager,
 
 			fx.Annotate(
 				pg.NewUserRepo,
@@ -60,11 +60,11 @@ func Run() {
 			),
 			fx.Annotate(
 				providers.NewListingService,
-        fx.As(new(service.IListingService)),
+				fx.As(new(service.IListingService)),
 			),
 			fx.Annotate(
 				providers.NewAuthService,
-        fx.As(new(service.IAuthService)),
+				fx.As(new(service.IAuthService)),
 			),
 		),
 		fx.Supply(cfg, logger),
